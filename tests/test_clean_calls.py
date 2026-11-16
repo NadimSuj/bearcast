@@ -83,3 +83,12 @@ def test_open_layer_only_fills_the_gap_between_historical_and_recent():
     out = C.clean(hist, rec, opn)
     assert sorted(out["IncidentID"]) == ["IN-1", "IN-10", "IN-902", "IN-903"]
     assert set(out.loc[out["source_layer"] == "open_gapfill", "date"].dt.year) == {2023, 2024}
+
+
+
+def test_duplicate_ids_within_recent_keep_last_downloaded_copy():
+    hist = _gdf([_row(1, "2022-12-31")])
+    rec = _gdf([_row(7, "2026-03-01", reason="In Area"), _row(7, "2026-03-01", reason="In Garbage")], recent=True)
+    out = C.clean(hist, rec).set_index("IncidentID")
+    assert len(out) == 2
+    assert out.loc["IN-7", "reason"] == "in garbage"

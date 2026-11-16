@@ -1,6 +1,6 @@
 # Phase 0 decisions
 
-Status: **proposed** (2026-11-16). Based on the historical calls layer (80,331 calls).
+Status: **accepted** (2026-11-16). Based on the historical calls layer (80,331 calls).
 Re-check after calls_recent (2023+) is cleaned.
 
 ## Findings
@@ -50,3 +50,16 @@ Re-check after calls_recent (2023+) is cleaned.
   handled_historical runs to 2025-12-05 and handled_recent starts 2025-01-02 -> dedupe 2025 in Phase 1.
 - Telemetry: 30-min fixes for 15 bears, 2 h for bear 155. Resample to 2 h for a common interval, or drop 155 at 30 min.
 - Fallback if 2023-2024 can't be filled: train on 2015-2022 and test on 2025-2026 as an out-of-time holdout.
+
+
+## Phase 0 final (2026-11-16)
+- Calls: 106,285 = historical (1980-2022) + Open Data gap fill (2023-2024, 12,492 rows) + recent (2025 to 2026-10-31). No missing years.
+- Calls per year: 2015-2022 between 4,982 and 5,932; 2023 7,054; 2024 5,438; 2025 7,450; 2026 6,012 (Jan-Oct).
+- The Open Data layer (same system as historical) shows 2025 = 7,404, matching the recent layer's 7,450.
+  So the high years are real swings, not a recording change. Year-to-year drivers (acorn/mast, drought) are Phase 1 features.
+  No separate "regime" term needed.
+- Recent layer had 903 duplicate IncidentIDs (2026). Dedupe keeps the last-downloaded copy (deterministic since v0.3). See notebook 02, cell 18.
+- No placeholder dates: Jan 1 has 6-10 calls/yr; calls by day of month are flat.
+- "killed human" (1 record) = FWC-confirmed first fatal black bear attack in state history, Collier County, 2025-05-05. Kept in human_safety.
+- Split: train 2015-2023, validate 2024, test 2025 to 2026-10 (out-of-time).
+- All earlier decisions stand: monthly time step, H3 res 7, is_conflict target, handled layers only, relocations excluded, GBIF dropped.

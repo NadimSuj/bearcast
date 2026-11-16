@@ -59,7 +59,7 @@ CALL_CLASS: dict[str, str] = {
     "attacked human": "human_safety",
     "injured human": "human_safety",
     "unintentionally approached human": "human_safety",
-    "killed human": "human_safety",  # 1 record in the recent layer: verify before trusting
+    "killed human": "human_safety",  # 1 record: FWC-confirmed fatal attack, Collier County, 2025-05-05
     # bear seen near people, no damage
     "in area": "sighting",
     "in yard": "sighting",
@@ -140,9 +140,10 @@ def combine(
             parts.append(gap.assign(source_layer="open_gapfill"))
 
     df = pd.concat([p[[c for c in KEEP if c in p.columns] + ["source_layer"]] for p in parts], ignore_index=True)
-    # If an incident appears in more than one layer, keep the recent copy.
+    # If an IncidentID appears more than once, keep one copy: recent beats other layers, and within a
+    # layer the last-downloaded row (highest OBJECTID) wins. kind="stable" keeps that order deterministic.
     before = len(df)
-    df = df.sort_values("source_layer", key=lambda s: s.eq("recent")).drop_duplicates("IncidentID", keep="last")
+    df = df.sort_values("source_layer", key=lambda s: s.eq("recent"), kind="stable").drop_duplicates("IncidentID", keep="last")
     if before - len(df):
         log.info("Dropped %d incidents present in more than one layer", before - len(df))
     return gpd.GeoDataFrame(df, geometry="geometry", crs=historical.crs)
