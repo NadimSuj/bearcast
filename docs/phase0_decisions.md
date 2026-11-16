@@ -63,3 +63,4 @@ Re-check after calls_recent (2023+) is cleaned.
 - "killed human" (1 record) = FWC-confirmed first fatal black bear attack in state history, Collier County, 2025-05-05. Kept in human_safety.
 - Split: train 2015-2023, validate 2024, test 2025 to 2026-10 (out-of-time).
 - All earlier decisions stand: monthly time step, H3 res 7, is_conflict target, handled layers only, relocations excluded, GBIF dropped.
+- Recent-layer duplicates: one 2026 batch loaded twice (OBJECTIDs offset by 904). Copies match except 56 coordinate and 12 city corrections; the last (corrected) copy is kept.

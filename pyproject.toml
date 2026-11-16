@@ -16,6 +16,7 @@ dependencies = [
     "pyarrow>=14",
     "duckdb>=1.0",
     "matplotlib>=3.8",
+    "h3>=4.1",
 ]
 
 [project.optional-dependencies]
