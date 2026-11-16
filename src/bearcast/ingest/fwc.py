@@ -19,12 +19,25 @@ from bearcast.ingest.arcgis import fetch_layer
 
 HOST = "https://gis.myfwc.com"
 OPEN = f"{HOST}/hosting/rest/services/Open_Data"
+PUBLIC_MAP = f"{HOST}/mapping/rest/services/Projects_FWC/InteractivePublicBearMap/MapServer"
 
 # Layer IDs verified against the live services on 2026-11-16.
 FWC_LAYERS: dict[str, dict[str, str]] = {
     "bear_calls": {
-        "url": f"{HOST}/mapping/rest/services/Projects_FWC/InteractivePublicBearMap/MapServer/3",
-        "note": "Bear-related calls from the public, 1980-2025. Main target variable.",
+        "url": f"{PUBLIC_MAP}/3",
+        "note": "Calls HISTORICAL (1980-2022). Fields: Region, ZipCode, CallNature.",
+    },
+    "calls_recent": {
+        "url": f"{PUBLIC_MAP}/2",
+        "note": "Calls RECENT (2023+). Renamed fields: FWCRegion, ZIPCode, ReasonForCall.",
+    },
+    "handled_historical": {
+        "url": f"{PUBLIC_MAP}/1",
+        "note": "Bears handled by FWC (captures, relocations, mortalities) with reason/sex/age.",
+    },
+    "handled_recent": {
+        "url": f"{PUBLIC_MAP}/0",
+        "note": "Bears handled by FWC, recent records.",
     },
     "roadkill": {
         "url": f"{OPEN}/Black_Bear_Roadkill_Locations/MapServer/12",
