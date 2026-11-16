@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bearcast"
+version = "0.0.1"
+description = "Florida black bear conflict forecasting pipeline"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "pandas>=2.1",
+    "geopandas>=0.14",
+    "shapely>=2.0",
+    "pyproj>=3.6",
+    "pyarrow>=14",
+    "duckdb>=1.0",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "jupyterlab>=4", "ipykernel"]
+
+[project.scripts]
+bearcast-fwc = "bearcast.ingest.fwc:main"
+bearcast-gbif = "bearcast.ingest.gbif:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

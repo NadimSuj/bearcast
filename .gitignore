@@ -1,0 +1,15 @@
+# data stays out of git; it's re-downloadable
+data/raw/*
+!data/raw/.gitkeep
+data/interim/
+data/processed/
+
+# python
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# secrets
+.env
