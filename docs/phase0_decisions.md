@@ -34,3 +34,19 @@ Re-check after calls_recent (2023+) is cleaned.
 7. Relocations: excluded from any presence/habitat data.
 8. GBIF: dropped. Presence data = FWC captures/telemetry + SNAPSHOT USA (check FL sites in Phase 1).
 9. Phase 1 must include bias features (housing density, population, roads).
+
+
+## Update (v0.3, after adding the recent layer)
+- Combined calls: 93,793 (historical 80,331 + recent 13,462), 1980-10-02 to 2026-10-31.
+- GAP: historical ends 2022-12-31, recent starts 2025-01-02. Filling 2023-2024 from the Open Data layer (MapServer/13), gap dates only.
+- Recent layer runs ~37% above the 2015-2022 average (2025 = 7,450; 2026 heading for ~7,500 vs ~5,440).
+  Real increase or recording change? Unknown until 2023-2024 are filled. Model must include a year/regime term.
+- New reasons mapped: unknown -> admin_other, orphaned cub -> bear_welfare, in trap -> attractant_property,
+  killed human -> human_safety (1 record, verify).
+- Repeats: 643 rows -> drop.
+- Precision: 224 calls with <= 2 decimals (>= ~1 km error) -> exclude from the res 7 model.
+- Default-geocode suspects: Fort McCoy 29.1685,-81.6427 (58 dead bear, 2015-2026) and 29.1783,-81.709 (18 in area) -> flag.
+- Handled layers (historical 11,704) = roadkill + captures + relocations (11,752). Use the handled layers only.
+  handled_historical runs to 2025-12-05 and handled_recent starts 2025-01-02 -> dedupe 2025 in Phase 1.
+- Telemetry: 30-min fixes for 15 bears, 2 h for bear 155. Resample to 2 h for a common interval, or drop 155 at 30 min.
+- Fallback if 2023-2024 can't be filled: train on 2015-2022 and test on 2025-2026 as an out-of-time holdout.

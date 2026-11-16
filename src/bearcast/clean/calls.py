@@ -1,7 +1,8 @@
 """Combine FWC historical + recent bear calls into one clean table.
 
 What this does:
-  1. Harmonize schemas (the recent layer renamed three fields).
+  1. Harmonize schemas (the recent layer renamed three fields). Rows from the
+     Open Data layer are used only to fill dates the other two layers miss.
   2. Fix dates: FWC stores date-only values as 00:00 UTC. Converting those to
      Florida time would shift every call back one day, so we take the UTC date.
   3. Map the 41 raw call reasons to six classes + conflict/encounter flags.
@@ -31,7 +32,7 @@ INTERIM = Path("data/interim")
 # Recent layer field names -> historical names
 RECENT_RENAME = {"FWCRegion": "Region", "ZIPCode": "ZipCode", "ReasonForCall": "CallNature"}
 
-# Every value seen in the historical layer (Phase 0 EDA, 2026-11-16), normalized to lowercase.
+# Every value seen in the historical + recent layers (Phase 0 EDA, 2026-11-16), lowercase.
 CALL_CLASS: dict[str, str] = {
     # bear getting into human food / property
     "in garbage": "attractant_property",
@@ -47,6 +48,7 @@ CALL_CLASS: dict[str, str] = {
     "in building/tent/vehicle": "attractant_property",
     "under structure": "attractant_property",
     "in hog trap": "attractant_property",
+    "in trap": "attractant_property",
     # pets / livestock
     "killed animal": "pets_livestock",
     "attacked animal": "pets_livestock",
@@ -57,6 +59,7 @@ CALL_CLASS: dict[str, str] = {
     "attacked human": "human_safety",
     "injured human": "human_safety",
     "unintentionally approached human": "human_safety",
+    "killed human": "human_safety",  # 1 record in the recent layer: verify before trusting
     # bear seen near people, no damage
     "in area": "sighting",
     "in yard": "sighting",
@@ -72,12 +75,14 @@ CALL_CLASS: dict[str, str] = {
     "animal injured bear": "bear_welfare",
     "animal killed bear": "bear_welfare",
     "harvest (hunt)": "bear_welfare",
+    "orphaned cub": "bear_welfare",
     # not about bear behavior
     "illegal activity": "admin_other",
     "research": "admin_other",
     "research project": "admin_other",
     "species information": "admin_other",
     "other": "admin_other",
+    "unknown": "admin_other",
     "": "admin_other",
 }
 CONFLICT_CLASSES = {"attractant_property", "pets_livestock", "human_safety"}
@@ -110,21 +115,45 @@ def classify(reason_norm: pd.Series) -> pd.Series:
     return cls.fillna("unmapped")
 
 
-def combine(historical: gpd.GeoDataFrame, recent: gpd.GeoDataFrame | None) -> gpd.GeoDataFrame:
+def combine(
+    historical: gpd.GeoDataFrame,
+    recent: gpd.GeoDataFrame | None,
+    open_layer: gpd.GeoDataFrame | None = None,
+) -> gpd.GeoDataFrame:
     parts = [historical.assign(source_layer="historical")]
-    if recent is not None and len(recent):
+    has_recent = recent is not None and len(recent) > 0
+    if has_recent:
         parts.append(recent.rename(columns=RECENT_RENAME).assign(source_layer="recent"))
+
+    if open_layer is not None and len(open_layer):
+        # Use the Open Data layer ONLY for dates the other two layers don't cover
+        # (the 2023-2024 gap). Its IncidentIDs may not match, so this avoids double counting.
+        hist_end = historical["ReportDate"].max()
+        in_gap = open_layer["ReportDate"] > hist_end
+        rec_start = recent["ReportDate"].min() if has_recent else None
+        if rec_start is not None:
+            in_gap &= open_layer["ReportDate"] < rec_start
+        gap = open_layer[in_gap]
+        log.info("Open Data layer: %d of %d rows fall between %s and %s",
+                 len(gap), len(open_layer), hist_end.date(), rec_start.date() if rec_start is not None else "now")
+        if len(gap):
+            parts.append(gap.assign(source_layer="open_gapfill"))
+
     df = pd.concat([p[[c for c in KEEP if c in p.columns] + ["source_layer"]] for p in parts], ignore_index=True)
-    # If an incident appears in both layers, keep the recent copy.
+    # If an incident appears in more than one layer, keep the recent copy.
     before = len(df)
     df = df.sort_values("source_layer", key=lambda s: s.eq("recent")).drop_duplicates("IncidentID", keep="last")
     if before - len(df):
-        log.info("Dropped %d incidents present in both layers", before - len(df))
+        log.info("Dropped %d incidents present in more than one layer", before - len(df))
     return gpd.GeoDataFrame(df, geometry="geometry", crs=historical.crs)
 
 
-def clean(historical: gpd.GeoDataFrame, recent: gpd.GeoDataFrame | None = None) -> gpd.GeoDataFrame:
-    df = combine(historical, recent)
+def clean(
+    historical: gpd.GeoDataFrame,
+    recent: gpd.GeoDataFrame | None = None,
+    open_layer: gpd.GeoDataFrame | None = None,
+) -> gpd.GeoDataFrame:
+    df = combine(historical, recent, open_layer)
     df["date"] = report_date(df["ReportDate"])
     df["year"] = df["date"].dt.year
     df["month"] = df["date"].dt.month
@@ -157,8 +186,12 @@ def main(argv: list[str] | None = None) -> int:
     recent = gpd.read_parquet(recent_path) if recent_path.exists() else None
     if recent is None:
         log.warning("No recent calls file; run `python -m bearcast.ingest.fwc calls_recent`")
+    open_path = args.raw / "fwc_calls_open.parquet"
+    open_layer = gpd.read_parquet(open_path) if open_path.exists() else None
+    if open_layer is None:
+        log.warning("No Open Data calls file; run `python -m bearcast.ingest.fwc calls_open` to fill 2023-2024")
 
-    df = clean(hist, recent)
+    df = clean(hist, recent, open_layer)
     args.out.mkdir(parents=True, exist_ok=True)
     out = args.out / "calls_clean.parquet"
     df.to_parquet(out, index=False)
@@ -167,6 +200,8 @@ def main(argv: list[str] | None = None) -> int:
     log.info("By class:\n%s", df["call_class"].value_counts().to_string())
     log.info("Conflict calls: %d | encounter calls: %d | repeat rows: %d",
              df["is_conflict"].sum(), df["is_encounter"].sum(), df["is_repeat"].sum())
+    per_year = df[df["year"] >= 2015].groupby(["year", "source_layer"]).size().unstack(fill_value=0)
+    log.info("Calls per year since 2015, by source layer:\n%s", per_year.to_string())
     return 0
 
 
