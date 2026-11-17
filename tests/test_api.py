@@ -46,6 +46,9 @@ def test_layers_geojson_h3_and_bbox(client):
     assert len(client.get("/api/layers/habitat", params={"bbox": tiny}).json()["features"]) == 1
     assert client.get("/api/layers/habitat", params={"bbox": "1,2,3"}).status_code == 422
     assert client.get("/api/layers/nope").status_code == 404
+    # corridors: cells inside a population core (core != '') and unreachable cells are left out
+    cor = client.get("/api/layers/corridors", params={"format": "h3"}).json()
+    assert len(cor) == len(CELLS) - 2 and CELLS[0] not in {r["cell"] for r in cor}
 
 
 def test_corridors_sims_scores(client):

@@ -62,7 +62,7 @@ LAYERS = {   # layer name -> (view, property columns, filter)
     "emerging": ("latest_forecast", ["cell", "emerging_rank", "emerging_pct", "expected_calls", "never_conflict"], "emerging_pct <= 0.10"),
     "activity": ("latest_activity", ["cell", "activity_level", "reports_90d", "days_since_report"], "activity_level <> 'none'"),
     "habitat": ("latest_bear_layers", ["cell", "habitat_pct", "core"], "true"),
-    "corridors": ("latest_bear_layers", ["cell", "corridor_value", "corridor_pair", "on_best_path"], "corridor_value <= 0.15 AND core IS NULL"),
+    "corridors": ("latest_bear_layers", ["cell", "corridor_value", "corridor_pair", "on_best_path"], "corridor_value <= 0.15 AND coalesce(core, '') = ''"),
     "road_risk": ("latest_bear_layers", ["cell", "road_risk"], "road_risk > 0"),
 }
 
