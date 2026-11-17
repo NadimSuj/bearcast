@@ -12,24 +12,19 @@ import { api, type FeatureCollection, type HexRow, type LayerName, type PointInf
 import { LAYERS, SIM_COLORS, hex } from './layers'
 import { BRAND } from './theme'
 import { Details } from './components/Details'
-import { longDate } from './format'
+import { longDate, startName } from './format'
 import { SimControls } from './components/SimControls'
 
-// base maps: all free, no API key. Satellite is Esri's World Imagery tiles.
-const SATELLITE: StyleSpecification = {
-  version: 8,
-  sources: {
-    esri: {
-      type: 'raster', tileSize: 256, maxzoom: 19,
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-      attribution: 'Imagery © Esri, Maxar, Earthstar Geographics',
-    },
-  },
-  layers: [{ id: 'esri', type: 'raster', source: 'esri' }],
-}
+// base maps. Color and Artistic are MapTiler styles and need a MapTiler key in web/.env.local (VITE_MAPTILER_KEY=...).
+// Without a key, Color falls back to CARTO Voyager and Artistic is disabled. Light is CARTO Positron (free, no key).
+const VOYAGER = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'
+const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY as string | undefined
+const maptiler = (mapId: string) => `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY ?? ''}`
+const COLOR_MAP_ID = '01a1eae1-07b8-73f8-bbcc-6c44853bafe3'
+const AQUARELLE_MAP_ID = '01a1ead8-0efa-7410-afbf-66cf36d1650a'
 const BASEMAPS = {
-  color: { label: 'Colour', style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json' as string | StyleSpecification },
-  satellite: { label: 'Satellite', style: SATELLITE as string | StyleSpecification },
+  color: { label: 'Color', style: (MAPTILER_KEY ? maptiler(COLOR_MAP_ID) : VOYAGER) as string | StyleSpecification },
+  artistic: { label: 'Artistic', style: maptiler(AQUARELLE_MAP_ID) as string | StyleSpecification },
   light: { label: 'Light', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json' as string | StyleSpecification },
 }
 type BasemapName = keyof typeof BASEMAPS
@@ -168,7 +163,7 @@ export default function App() {
   function tooltip(info: PickingInfo) {
     if (!info.object) return null
     let text: string | null = null
-    if (info.layer?.id === 'sim-starts') text = `${(info.object as SimStart).start_label} · click to simulate`
+    if (info.layer?.id === 'sim-starts') text = `${startName((info.object as SimStart).start_label).full} · click to simulate`
     else if (info.layer?.id === 'paths') {
       const p = (info.object as { properties: Record<string, unknown> }).properties
       text = `${p.pair} · ${p.length_km} km · ${p.busy_road_hexagons} busy-road hexagons`
@@ -222,9 +217,15 @@ export default function App() {
           <p className="eyebrow">Base map</p>
           <div className="seg">
             {(Object.keys(BASEMAPS) as BasemapName[]).map(b => (
-              <button key={b} className={b === basemap ? 'active' : ''} onClick={() => setBasemap(b)}>{BASEMAPS[b].label}</button>
+              <button key={b} className={b === basemap ? 'active' : ''} onClick={() => setBasemap(b)}
+                      disabled={b === 'artistic' && !MAPTILER_KEY}
+                      title={b === 'artistic' && !MAPTILER_KEY ? 'Needs VITE_MAPTILER_KEY in web/.env.local' : undefined}>{BASEMAPS[b].label}</button>
             ))}
           </div>
+          {basemap === 'artistic' && (
+            <p className="basemap-note"><b>Artistic map.</b> A hand-painted watercolour style (MapTiler Aquarelle), made for looks
+              rather than navigation: roads, places and coastlines are simplified, so use Color or Light for detail.</p>
+          )}
         </section>
 
         <section className="sb-section">

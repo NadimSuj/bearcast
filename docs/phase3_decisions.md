@@ -46,4 +46,8 @@ Emerging risk got its own API layer because most emerging hexagons sit in the "l
   The bear logo sits in a badge in the map's top-right corner; the hexagon panel opens below it.
 - Layer palettes were shifted toward the brand (rust / amber / sand for risk, greens for habitat, swamp blues for emerging risk).
 - Simulated tracks no longer fade: each bear's whole path so far stays solid, 4 px wide over a dark 7 px casing,
-  in ten saturated colours that read on the colour, light and satellite base maps.
+  in ten saturated colours that read on the color, artistic and light base maps.
+- Artistic base map: MapTiler Aquarelle (watercolour), loaded from the user's MapTiler map style.
+  The key lives in web/.env.local as VITE_MAPTILER_KEY (git-ignored); without it the button is disabled.
+  A note under the buttons says it is an artistic map made for looks, not navigation.
+- Color base map: the user's MapTiler map (id 01a1eae1-…), same key as Artistic; falls back to CARTO Voyager without a key.

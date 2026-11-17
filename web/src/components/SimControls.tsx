@@ -1,5 +1,6 @@
 // Pick a start point and play the simulated 14-day tracks.
 import type { SimStart } from '../api'
+import { startName } from '../format'
 
 interface Props {
   starts: SimStart[]
@@ -14,14 +15,45 @@ interface Props {
 
 export function SimControls({ starts, selected, onSelect, hour, maxHour, playing, onPlay, onSeek }: Props) {
   const day = Math.min(14, Math.floor(hour / 24) + 1)
+  const named = starts.map(s => ({ ...s, label: startName(s.start_label) }))
+  const cores = named.filter(s => s.label.kind === 'core')
+  const hotspots = named.filter(s => s.label.kind === 'activity')
+  const others = named.filter(s => s.label.kind === 'other')
+  const current = named.find(s => s.start_id === selected)?.label
   return (
     <section className="sb-section">
       <p className="eyebrow">Simulated movement</p>
       <p className="sb-sub">Where bears could wander from a starting point</p>
       <select className="sb-select" value={selected ?? ''} onChange={e => onSelect(e.target.value === '' ? null : Number(e.target.value))}>
-        <option value="">Choose a starting point…</option>
-        {starts.map(s => <option key={s.start_id} value={s.start_id}>{s.start_label}</option>)}
+        <option value="">Choose a Starting Point…</option>
+        {cores.length > 0 && (
+          <optgroup label="Population Cores">
+            {cores.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
+          </optgroup>
+        )}
+        {hotspots.length > 0 && (
+          <optgroup label="Recent Activity Hotspots">
+            {hotspots.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
+          </optgroup>
+        )}
+        {others.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
       </select>
+
+      {current ? (
+        <p className="sb-note start-what">
+          {current.kind === 'core' && <><b>{current.full}.</b> Starts in prime habitat inside one of Florida's main bear populations.</>}
+          {current.kind === 'activity' && <><b>{current.full}.</b> Starts in one of the 10 hexagons with the most bear reports in the last 90 days ({current.name} = rank).</>}
+          {current.kind === 'other' && <b>{current.full}</b>}
+        </p>
+      ) : (
+        <dl className="start-help">
+          <dt>Population Cores</dt>
+          <dd>The heart of each of Florida's main black bear populations (FWC's "frequent" bear range). The simulated bears start in prime habitat inside the core.</dd>
+          <dt>Recent Activity Hotspots</dt>
+          <dd>The 10 hexagons with the most bear reports (sightings, conflict calls, roadkill) in the 90 days before the simulations were made. #1 had the most.</dd>
+        </dl>
+      )}
+
       {selected !== null && (
         <>
           <div className="player">

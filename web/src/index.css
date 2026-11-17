@@ -80,6 +80,13 @@ button { font: inherit; cursor: pointer; }
 .day { font-size: 14px; font-weight: 600; white-space: nowrap; }
 .day span { font-weight: 400; color: var(--sand); }
 .sb-note { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: rgba(255, 255, 255, 0.72); }
+.start-what { margin-top: 10px; }
+.start-what b { color: #fff; font-weight: 600; }
+.start-help { margin: 12px 0 0; font-size: 12.5px; line-height: 1.5; }
+.start-help dt { color: var(--sand); font-weight: 600; margin-top: 8px; }
+.start-help dt:first-child { margin-top: 0; }
+.start-help dd { margin: 2px 0 0; color: rgba(255, 255, 255, 0.72); }
+.sb-select optgroup { font-weight: 600; color: var(--bear); }
 .sb-link { margin-top: 8px; padding: 0; border: none; background: none; color: var(--sand); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
 
 .sb-foot { border-top: 1px solid var(--line-dark); margin-top: 22px; padding-top: 14px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
@@ -93,7 +100,7 @@ button { font: inherit; cursor: pointer; }
   background: var(--sand); border: 9px solid var(--green); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   display: grid; place-items: center; overflow: hidden; pointer-events: none;
 }
-.logo img { width: 84%; height: auto; transform: translate(-2%, 4%); }
+.logo img { width: 84%; height: auto; transform: translate(-2%, -5%); }   /* lifts the bear so its visual weight sits in the middle */
 
 /* ---------- details panel ---------- */
 .details {
@@ -142,6 +149,11 @@ button { font: inherit; cursor: pointer; }
 .d-row:first-of-type { margin-top: 0; }
 .d-label { color: var(--swamp); }
 .d-row b { font-size: 15px; }
+
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.basemap-note { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(230, 211, 179, 0.12);
+                border-left: 3px solid var(--amber); font-size: 12.5px; line-height: 1.5; color: rgba(255, 255, 255, 0.85); }
+.basemap-note b { color: var(--sand); }
 
 /* MapLibre attribution: blend with the cards */
 .maplibregl-ctrl-attrib { border-radius: 8px 0 0 0; }
