@@ -5,7 +5,8 @@ Steps:
   2. Drop repeat reports, imprecise coordinates (< 3 decimals ~ >100 m error), and
      suspected default geocodes (a low-precision point reused by many calls).
   3. Assign each call to an H3 hexagon (default resolution 7, ~5 km2).
-  4. "Cell universe" = hexagons inside FWC's bear range polygons + any hexagon with a call.
+  4. Cell universe = hexagons inside FWC's bear range polygons + any hexagon with a call
+  + a ring of neighbours around calls outside the range (so the model sees zeros there too).
   5. Zero-fill every cell x month, count calls by type, and label the train/val/test split.
 
 Outputs (data/processed/):
@@ -136,7 +137,8 @@ def build_panel(
     start: pd.Timestamp,
     end_month: pd.Timestamp,
     res: int,
-) -> tuple[pd.DataFrame, gpd.GeoDataFrame]:
+    ring: int = 1,
+) -> tuple[pd.DataFrame, gpd.GeoDataFrame]:    
     ev = events.copy()
     ev["cell"] = assign_cells(ev, res)
     ev["month"] = ev["date"].dt.to_period("M").dt.to_timestamp()
@@ -145,7 +147,14 @@ def build_panel(
     ev["n_sighting"] = (ev["call_class"] == "sighting").astype(int)
     ev["n_bear_welfare"] = (ev["call_class"] == "bear_welfare").astype(int)
 
-    cells = sorted(set(range_rank) | set(ev["cell"]))
+    # Outside the mapped range, the only cells we'd know about are ones WITH calls, so the model
+    # would never see a quiet cell there. Adding their neighbours gives it those zeros.
+    call_cells = set(ev["cell"])
+    ring_cells: set[str] = set()
+    if ring > 0:
+        for c in call_cells - set(range_rank):
+            ring_cells.update(h3.grid_disk(c, ring))
+    cells = sorted(set(range_rank) | call_cells | ring_cells)    
     months = pd.date_range(start, end_month, freq="MS")
     idx = pd.MultiIndex.from_product([cells, months], names=["cell", "month"])
 
@@ -199,6 +208,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--res", type=int, default=7, help="H3 resolution (7 ~5 km2, 6 ~36 km2)")
     p.add_argument("--start", default="2015-01", help="first month, YYYY-MM")
     p.add_argument("--end", default=None, help="last month, YYYY-MM (default: last complete month)")
+    p.add_argument("--ring", type=int, default=1, help="neighbour rings added around calls outside the range")
     p.add_argument("--interim", type=Path, default=INTERIM)
     p.add_argument("--raw", type=Path, default=RAW)
     p.add_argument("--out", type=Path, default=PROCESSED)
@@ -217,8 +227,8 @@ def main(argv: list[str] | None = None) -> int:
         log.warning("No range file; the cell universe will only contain cells with calls")
     rr = range_cells(range_gdf, args.res)
 
-    panel, cell_tbl = build_panel(events, rr, start, end_month, args.res)
-    report = {"resolution": args.res, "start": str(start.date()), "end_month": str(end_month.date()),
+    panel, cell_tbl = build_panel(events, rr, start, end_month, args.res, args.ring)
+    report = {"resolution": args.res, "ring": args.ring, "start": str(start.date()), "end_month": str(end_month.date()),
               "filtering": filt, "sparsity": sparsity_report(panel, cell_tbl)}
 
     args.out.mkdir(parents=True, exist_ok=True)

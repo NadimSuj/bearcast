@@ -55,7 +55,8 @@ def test_panel_is_zero_filled_and_counts_are_right():
 
     call_cell = h3.latlng_to_cell(29.123456, -81.654321, 7)
     assert len(rr) > 0 and set(rr.values()) == {4}
-    assert panel["cell"].nunique() == len(rr) + 2           # range cells + two call cells
+    # range cells + two call cells outside the range, each with its 6 neighbours (ring=1)
+    assert panel["cell"].nunique() == len(rr) + 2 * 7    
     assert len(panel) == panel["cell"].nunique() * 3        # 3 months each
     jan = panel[(panel.cell == call_cell) & (panel.month == START)].iloc[0]
     assert jan.n_conflict == 2 and jan.n_encounter == 2 and jan.n_sighting == 0
@@ -69,3 +70,14 @@ def test_panel_is_zero_filled_and_counts_are_right():
 def test_split_labels():
     m = pd.Series(pd.to_datetime(["2023-12-01", "2024-01-01", "2024-12-01", "2025-01-01"]))
     assert list(P.label_split(m)) == ["train", "val", "val", "test"]
+
+    
+
+def test_ring_zero_keeps_only_range_and_call_cells():
+    rows = [{"date": "2015-01-05", "lat": 29.123456, "lon": -81.654321}]
+    ev, _ = P.filter_events(_calls(rows), START, END)
+    panel0, _ = P.build_panel(ev, {}, START, END, 7, ring=0)
+    panel1, cells1 = P.build_panel(ev, {}, START, END, 7, ring=1)
+    assert panel0["cell"].nunique() == 1
+    assert panel1["cell"].nunique() == 7
+    assert (cells1["n_conflict_total"] == 0).sum() == 6
