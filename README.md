@@ -5,6 +5,9 @@
 <h1 align="center">BearCast</h1>
 <p align="center"><b>A monthly outlook for Florida black bears: where conflicts with people are likely, where bears have been, and where they could go.</b></p>
 
+<p align="center"><a href="https://bearcast.onrender.com"><b>View the live map →</b></a><br>
+<sub>Free hosting: if nobody has visited for a while, the first load can take about a minute while the server wakes up.</sub></p>
+
 ---
 
 ## What is BearCast?

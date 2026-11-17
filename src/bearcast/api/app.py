@@ -24,6 +24,7 @@ import os
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy import Engine, text
@@ -65,6 +66,10 @@ def create_app(eng: Engine | None = None, cors_origins: list[str] | None = None)
         if not (w < e and s < n):
             raise HTTPException(422, "bbox must satisfy west < east and south < north")
         return w, s, e, n
+
+    @app.get("/", include_in_schema=False)
+    def root() -> RedirectResponse:                  # the bare API address opens the interactive docs
+        return RedirectResponse("/docs")
 
     @app.get("/api/health")
     def health(eng: Engine = Depends(db)):

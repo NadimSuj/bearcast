@@ -16,6 +16,11 @@ def client(eng, data):  # noqa: F811
     return TestClient(create_app(eng))
 
 
+def test_root_redirects_to_docs(client):
+    r = client.get("/", follow_redirects=False)
+    assert r.status_code in (302, 307) and r.headers["location"] == "/docs"
+
+
 def test_health_and_runs(client):
     r = client.get("/api/health")
     assert r.status_code == 200 and r.json()["status"] == "ok"
