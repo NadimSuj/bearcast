@@ -168,3 +168,11 @@ Pipeline: FWC calls → clean → H3 res-7 cell×month panel → history feature
 - Roadkill check (2010–2025, 3,942 records on state-road hexagons), share in top 5/10/20%: traffic 4/7/14%; **habitat × traffic 22/38/56%**; corridor crossing risk 11/25/67%. Most roadkill is resident bears inside cores, which a corridor score can't separate.
 - Decision: app road-risk layer = habitat × traffic (`road_risk`). Corridors = connectivity layer; busy-road hexagons on best routes (`on_best_path`) = candidate wildlife-crossing sites.
 - Wekiva diagnosis: model's top 10% = remote upland conservation land NW of the study area; the tracked bears used the Wekiva River swamp (forested wetland 46% vs 10%, closer to roads and housing). Likely the availability circle includes habitat used by other, uncollared bears. Documented, not "fixed".
+
+## Phase 1.5, step 3: simulated movement (step selection)
+
+- `bearcast.bears.movement`: Camp Blanding GPS → 1-hour steps; empirical (step length, turn) pools by time of day (night 21–5, dawn 5–9, day 9–17, dusk 17–21, Eastern) × season (fall Sep–Dec vs rest).
+- Covariates on a 100 m grid (hexagons are too coarse for hourly steps): 8 land-cover classes (from CLC), log distance to any road and to busy roads (AADT ≥ 10,000), busy-road crossing (entering a ~300 m band), log step length, cos(turn).
+- Conditional logit with 10 alternatives per observed step; fit on 12 bears, tested on 4 held-out bears (14-day windows) against a null walker with the same step pool and no habitat preference.
+- App output: 25 sims × 14 days from each core and the 10 most active hexagons; reach share per hexagon at 7 and 14 days. Clearly labelled as simulation.
+- Caveat: all movement rules come from one area (Camp Blanding, 16 bears, 2011–14), and hourly steps assume no long-distance dispersal behaviour beyond what those bears showed.
