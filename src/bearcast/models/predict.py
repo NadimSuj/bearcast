@@ -95,7 +95,9 @@ def main(argv: list[str] | None = None) -> int:
 
     booster = lgb.Booster(model_file=str(MODELS / f"gbm_{tag}_final_full.txt"))
     raw = booster.predict(df[booster.feature_name()].to_numpy(dtype=np.float32))
-    factor, c_from, c_to = rolling_calibration(pd.read_parquet(args.dir / f"preds_{tag}_test.parquet"))
+    # out-of-sample predictions: the final-test file, extended each month by the monthly job (oos_*.parquet)
+    oos = args.dir / f"oos_{tag}.parquet"
+    factor, c_from, c_to = rolling_calibration(pd.read_parquet(oos if oos.exists() else args.dir / f"preds_{tag}_test.parquet"))
     df["expected_calls"] = (raw * factor).astype("float32")
     out = add_ranks(df)[["cell", "month", "expected_calls", "risk_rank", "risk_pct", "tier",
                          "no_recent_conflict", "never_conflict", "emerging_rank", "emerging_pct",

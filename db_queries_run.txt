@@ -1,0 +1,53 @@
+
+Hexagon containing (30.41, -86.75):
+{
+  "cell": "874452d30ffffff",
+  "range_label": "frequent",
+  "forecast_month": "2026-11-01",
+  "expected_calls": 5.0097046,
+  "tier": "very high",
+  "risk_rank": 1,
+  "emerging_rank": null,
+  "never_conflict": false,
+  "activity_as_of": "2026-10-31",
+  "reports_90d": 36,
+  "days_since_report": 8,
+  "activity_level": "high",
+  "habitat_pct": 0.6216486,
+  "core": "Eglin-Apalachicola",
+  "corridor_pair": "Eglin-Apalachicola - Osceola",
+  "corridor_value": 0.0,
+  "road_risk": 0.52503484,
+  "hu_den_2020": 311.78726,
+  "cons_share": 0.25971955,
+  "lc_natural": 0.27129623,
+  "max_aadt": 46500.0
+}
+
+Highest-risk hexagons within 10 km:
+  874452d30ffffff  very high  5.01 expected calls  0.3 km away
+  874452d32ffffff  very high  3.25 expected calls  2.0 km away
+  874452d20ffffff  very high  1.86 expected calls  6.6 km away
+  874452da4ffffff  very high  1.54 expected calls  9.2 km away
+  874452d22ffffff  very high  1.48 expected calls  4.4 km away
+
+Top 5 statewide:
+  #1   874452d30ffffff  (30.409, -86.753)  5.01
+  #2   874452d32ffffff  (30.415, -86.730)  3.25
+  #3   8744a931effffff  (28.716, -81.516)  3.05
+  #4   874452da0ffffff  (30.456, -86.653)  2.81
+  #5   8744e5052ffffff  (30.331, -86.111)  2.53
+
+Top 5 emerging (no conflict in the last 12 months):
+  #1   874413c1effffff  (26.048, -81.686)  0.34
+  #2   8744566d1ffffff  (30.431, -86.903)  0.31
+  #3   8744f4123ffffff  (29.061, -82.207)  0.30
+  #4   8744e5048ffffff  (30.382, -86.230)  0.29
+  #5   8744f4cebffffff  (29.042, -81.963)  0.29
+
+Map layers as GeoJSON (feature counts):
+  forecast     6213 features
+  activity     5176 features
+  habitat     31069 features
+  corridors   10763 features
+  road_risk   15133 features

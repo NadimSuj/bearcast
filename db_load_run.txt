@@ -1,0 +1,14 @@
+2026-11-17 07:39:14,630 INFO hexagons           31069 rows
+2026-11-17 07:39:15,287 INFO landscape          31069 rows
+2026-11-17 07:39:19,038 INFO calls             106285 rows
+2026-11-17 07:39:19,628 INFO monthly_counts     39297 rows
+2026-11-17 07:39:20,183 INFO forecast           31069 rows
+2026-11-17 07:39:20,670 INFO activity           31069 rows
+2026-11-17 07:39:21,271 INFO bear_layers        31069 rows
+2026-11-17 07:39:21,925 INFO movement          126375 rows
+2026-11-17 07:39:21,956 INFO Table sizes: {'hexagons': 31069, 'landscape': 31069, 'calls': 106285, 'monthly_counts': 39297, 'model_runs': 4, 'forecasts': 31069, 'activity': 31069, 'bear_layers': 31069, 'corridor_paths': 6, 'sim_points': 126375, 'sim_reach': 933}
+2026-11-17 07:39:21,956 INFO Latest runs:
+  activity     run 2    data through 2026-10-31  loaded 2026-11-17
+  bear_layers  run 3    data through None  loaded 2026-11-17
+  forecast     run 1    data through 2026-10-01  loaded 2026-11-17
+  movement     run 4    data through None  loaded 2026-11-17
