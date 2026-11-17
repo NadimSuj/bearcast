@@ -180,10 +180,13 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--res", type=int, default=7)
     p.add_argument("--dir", type=Path, default=PROCESSED)
+    p.add_argument("--drop", nargs="*", default=[], help="features to leave out (for sensitivity checks)")
+    p.add_argument("--name", default="", help="suffix for output files, e.g. _nocons")
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     pd.set_option("display.width", 160)
     tag = f"h3r{args.res}"
+    out_tag = f"{tag}{args.name}"
 
     radio = clean_radio(pd.read_parquet(RAW / "fwc_telemetry_combined.parquet",
                                         columns=["Source", "Bear_ID", "Date", "Loc_Type", "Latitude", "Longitude"]))
@@ -203,6 +206,10 @@ def main(argv: list[str] | None = None) -> int:
 
     design = build_design(fixes, set(cells["cell"]), args.res)
     d, feats = add_features(design, static, era)
+    unknown = set(args.drop) - set(feats)
+    if unknown:
+        raise ValueError(f"--drop names unknown features: {sorted(unknown)}")
+    feats = [f for f in feats if f not in args.drop]
     d = d.merge(rank, on="cell", how="left")
     log.info("Design: %d used rows, %d available rows, %d features", int(d["used"].sum()), int((d["used"] == 0).sum()), len(feats))
 
@@ -225,26 +232,27 @@ def main(argv: list[str] | None = None) -> int:
 
     final = fit(d, feats)
     MODELS.mkdir(parents=True, exist_ok=True)
-    final.save_model(str(MODELS / f"habitat_{tag}.txt"))
+    final.save_model(str(MODELS / f"habitat_{out_tag}.txt"))
     today = static[["cell", *[f for f in feats if f != "hu_den_era"]]].merge(era[["cell", "hu_den_2020"]], on="cell", how="left")
+    # (hu_den_era is always computed; it is only used if it is still in feats)
     today = today.rename(columns={"hu_den_2020": "hu_den_era"})
     score = final.predict(today[feats].to_numpy(np.float32))
     out = pd.DataFrame({"cell": today["cell"], "habitat_score": score.astype(np.float32)})
     out["habitat_pct"] = out["habitat_score"].rank(pct=True).astype(np.float32)
-    out.to_parquet(args.dir / f"habitat_{tag}.parquet", index=False)
+    out.to_parquet(args.dir / f"habitat_{out_tag}.parquet", index=False)
 
     by_range = out.merge(rank, on="cell").groupby("range_rank")["habitat_pct"].agg(["mean", "size"]).round(3)
     gain = pd.Series(final.feature_importance("gain"), index=final.feature_name())
     top = (gain / gain.sum()).sort_values(ascending=False).head(15).round(3)
     log.info("Statewide habitat percentile by FWC range class (0 outside, 1 rare ... 4 frequent):\n%s", by_range.to_string())
     log.info("Top features:\n%s", top.to_string())
-    report = {"fixes": int(len(fixes)), "bears": int(fixes["bear"].nunique()), "features": feats,
+    report = {"fixes": int(len(fixes)), "bears": int(fixes["bear"].nunique()), "features": feats, "dropped": args.drop,
               "leave_one_area_out": cv.round(4).reset_index().to_dict(orient="records"),
               "mean": cv.drop(columns="bears").mean().round(4).to_dict(),
               "habitat_pct_by_range_rank": by_range.reset_index().to_dict(orient="records"),
               "top_features": top.to_dict()}
-    (args.dir / f"habitat_{tag}_report.json").write_text(json.dumps(report, indent=2, default=str))
-    log.info("Wrote %s", args.dir / f"habitat_{tag}.parquet")
+    (args.dir / f"habitat_{out_tag}_report.json").write_text(json.dumps(report, indent=2, default=str))
+    log.info("Wrote %s", args.dir / f"habitat_{out_tag}.parquet")
     return 0
 
 

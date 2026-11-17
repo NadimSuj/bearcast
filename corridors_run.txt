@@ -1,0 +1,23 @@
+2026-11-17 01:40:15,271 INFO Cores (>= 100 hexagons of FWC frequent range):
+core
+Ocala/St. Johns     3773
+Apalachicola        2821
+Big Cypress          980
+Osceola              517
+Highlands/Glades     475
+2026-11-17 01:40:15,482 INFO Best paths between cores:
+                              pair  cost  length_km  busy_road_hexagons
+     Big Cypress - Ocala/St. Johns 360.6      213.7                   8
+    Big Cypress - Highlands/Glades  79.9       44.8                   0
+    Apalachicola - Ocala/St. Johns 298.2      223.7                   3
+            Apalachicola - Osceola 378.0       86.7                   2
+Ocala/St. Johns - Highlands/Glades  52.9       54.9                   7
+         Ocala/St. Johns - Osceola  49.4       34.8                   1
+2026-11-17 01:40:15,590 INFO Roadkill 2010-2025: 4068 records, 4068 in the hexagon universe, 3942 in hexagons with state-road traffic data
+2026-11-17 01:40:15,612 INFO Share of roadkill in the top k% of road hexagons (15133 hexagons):
+                           top 5%  top 10%  top 20%
+traffic only                0.036    0.066    0.143
+habitat x traffic           0.219    0.382    0.562
+crossing risk (corridors)   0.106    0.253    0.670
+2026-11-17 01:40:15,632 INFO Corridor hexagons (within 5% of best path, outside cores): 1109
+2026-11-17 01:40:15,632 INFO Wrote data/processed/corridors_h3r7.parquet and data/processed/corridor_paths_h3r7.parquet

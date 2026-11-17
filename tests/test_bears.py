@@ -70,3 +70,38 @@ def test_recent_activity_counts_windows_and_smooths_to_neighbours():
     n1 = sorted(h3.grid_ring(c0, 1))[0]
     n2 = sorted(h3.grid_ring(c0, 2))[0]
     assert a.loc[c0, "activity_index"] == 2 and a.loc[n1, "activity_index"] == 1 and a.loc[n2, "activity_index"] == 0.5
+
+
+
+def test_resistance_transform_endpoints_and_monotone():
+    from bearcast.bears.corridors import resistance
+    r = resistance(np.array([0.0, 0.2, 0.5, 1.0, np.nan]))
+    assert r[0] == pytest.approx(100) and r[3] == pytest.approx(1) and r[4] == pytest.approx(100)
+    assert r[0] > r[1] > r[2] > r[3]
+
+
+def test_corridor_follows_cheap_habitat_between_two_cores():
+    from bearcast.bears.corridors import corridors, find_cores
+    c0 = h3.latlng_to_cell(29.0, -81.6, 7)
+    cells = sorted(h3.grid_disk(c0, 6))
+    idx = {c: i for i, c in enumerate(cells)}
+    # two cores: small discs on opposite sides
+    ring6 = sorted(h3.grid_ring(c0, 6))
+    a_c, b_c = ring6[0], max(ring6, key=lambda c: h3.grid_distance(ring6[0], c))
+    core_mask = np.zeros(len(cells), bool)
+    for c in list(h3.grid_disk(a_c, 1)) + list(h3.grid_disk(b_c, 1)):
+        if c in idx:
+            core_mask[idx[c]] = True
+    core = find_cores(cells, core_mask, min_cells=2)
+    assert sorted(set(core) - {-1}) == [0, 1]
+    # cheap strip = cells on one grid path from a_c to b_c; everything else expensive
+    strip = set(h3.grid_path_cells(a_c, b_c))
+    r = np.array([1.0 if c in strip else 50.0 for c in cells])
+    value, which, pairs, paths = corridors(cells, r, core)
+    assert pairs == [(0, 1)]
+    on_path = set(paths[0]["cells"])
+    assert len(on_path & strip) >= 0.8 * len(on_path)
+    for c in strip:
+        if core[idx[c]] < 0:
+            assert value[idx[c]] == pytest.approx(0, abs=1e-9)
+    assert np.nanmax(value[np.isfinite(value)]) > 1

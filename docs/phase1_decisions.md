@@ -139,3 +139,24 @@ Pipeline: FWC calls → clean → H3 res-7 cell×month panel → history feature
 - The FWC roadkill layer currently ends 2025-12-31, so the roadkill part of recent activity is empty until FWC updates it.
 - `bearcast.bears.habitat`: resource selection function (LightGBM binary, used vs available within ~10 km, weighted equally per bear), landscape + land-cover features only, housing matched to the decade of each fix.
 - Validation: leave-one-area-out over 8 groups (AUC, Boyce index, top-10% ratio), benchmarked against the FWC range map.
+
+### Habitat model v1 result
+
+- 39,460 daily fixes from 383 bears in 8 area groups (Ocala 164 bears; Camp Blanding GPS 16).
+- Leave-one-area-out: AUC 0.75 (range 0.68–0.85) vs FWC range map 0.68; model better in 7/8 areas (worse in South FL: 0.68 vs 0.77). Boyce 0.88 vs 0.55.
+- Statewide habitat percentile rises through FWC range classes: 0.37 / 0.41 / 0.45 / 0.54 / 0.59.
+- Concern: dist_bigcons_km carries 40% of gain. Conservation layer is current, tracking is 1983–2014; land bought after/because of bear studies could make this circular. Wekiva top-10% ratio 0.009.
+- Check (rule fixed before running): drop dist_cons_km, dist_bigcons_km, cons_share. Use the no-conservation model if mean held-out AUC is within 0.01 of v1 and no area drops more than 0.02; otherwise keep v1 and caveat.
+
+### Habitat model: conservation check result
+
+- Without the conservation features: mean held-out AUC 0.731 vs 0.751 (−0.020); Ocala −0.087, Camp Blanding −0.031. The rule says **keep v1**.
+- Biggest loss is Ocala, protected since 1908, long before any tracking, so the conservation signal there is real, not circular.
+- Wekiva top-10% ratio unchanged (0.009), so conservation features aren't the cause; diagnosed in notebook 06.
+- Caveat on the map: conservation boundaries are current, so areas protected after the studies may be slightly overrated.
+
+## Phase 1.5, step 2: corridors
+
+- `bearcast.bears.corridors`: resistance from habitat_pct (negative exponential, c = 4, range 1–100); cores = FWC frequent range clusters of ≥100 hexagons; Linkage-Mapper-style corridor value per hexagon for each core's 2 cheapest neighbours; best-path lines saved as GeoParquet.
+- Crossing risk = movement (1 in cores, exp(−value/0.05) outside) × scaled log AADT.
+- Check: share of 2010–2025 roadkill in the top 5/10/20% of road hexagons, crossing risk vs traffic only vs habitat × traffic.
