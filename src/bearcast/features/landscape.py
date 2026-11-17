@@ -68,12 +68,12 @@ def load_cells(path: Path) -> gpd.GeoDataFrame:
     return cells
 
 
-def read_housing(path: Path, chunk: int = 100_000) -> gpd.GeoDataFrame:
+def read_housing(path: Path, chunk: int = 100_000, columns: list[str] = HOUSING_COLS) -> gpd.GeoDataFrame:
     """Read census blocks in chunks and keep one interior point per block (keeps memory low)."""
     n = pyogrio.read_info(path)["features"]
     parts = []
     for start in range(0, n, chunk):
-        g = pyogrio.read_dataframe(path, columns=HOUSING_COLS, skip_features=start, max_features=chunk)
+        g = pyogrio.read_dataframe(path, columns=columns, skip_features=start, max_features=chunk)
         g["geometry"] = g.geometry.representative_point()
         parts.append(g.to_crs(CRS))
         log.info("  housing blocks %d / %d", min(start + chunk, n), n)

@@ -1,0 +1,182 @@
+================================================================================
+telemetry_combined
+
+by study area (Source):
+                          bears  fixes  first  last        lat        lon
+Source                                                                   
+Ocala SR40                   98   7204   1999  2003  29.185139 -81.734148
+S. FL                        69   7155   1986  1998  26.137373 -81.415378
+UT-UF OKNWR-Osceola          26   6871   1996  1999  30.453655 -82.550744
+Wekiva                       42   5128   1993  1995  28.795260 -81.457121
+Urban-wildland Interface     40   2749   2005  2007  29.190897 -81.825117
+Nuisance Relocation          41   2455   2004  2006  29.211302 -81.714955
+UT-UF Eglin                  40   2342      0  1998  30.565202 -86.590088
+UK Chassahowitzka            12   2118   1997  2003  28.547311 -82.616150
+Ocala                        27   1981   1985  1988  29.445136 -81.761712
+Apalachicola                 23    979   1990  1993  30.076747 -84.595051
+Osceola                       7    337   1983  1985  30.346146 -82.415880
+Cedar Key                     2    120   1996  1996  29.272888 -82.991766
+
+Researcher:
+Researcher
+McCown/Garrison/Moyer          7204
+Maehr                          7155
+Brandenburg/Scheick/Masters    6871
+Roof                           5128
+Neils                          2749
+Annis                          2455
+Alden/Stratman/Freedman        2342
+Wooding & Hardisky             2318
+Smith/Orlando/Brown            2118
+Seibert                         979
+Wooding & Roof                  120
+
+Loc_Type:
+Loc_Type
+Telemetry                        21338
+(blank)                          17166
+Visual                             304
+Den                                206
+Capture                            196
+Dropped collar                      87
+Nuisance                            72
+Hourly diel                         32
+Mortality                           14
+Mortality - killed by vehicle        9
+Tracks                               8
+Den creep                            3
+Removed                              2
+Camera                               1
+Injured - hit by vehicle             1
+
+Telem_Type:
+Telem_Type
+(blank)                    18058
+Ground                     13341
+Aerial                      4218
+Aerial - corrected          2225
+Aerial - raw                1011
+Aerial - plotted             483
+Ground - plotted              43
+GPS location                  18
+Visual - plotted on map       15
+Ground - corrected            14
+GPS location of visual         9
+Ground w/ visual               3
+GPS location of sound          1
+
+Activity:
+Activity
+(blank)             14896
+Inactive             9660
+Active               9198
+Y                    2505
+N                    1732
+Highly Active         820
+Mortality signal      298
+Mortality Signal      233
+TR-5                   87
+5                       6
+10                      2
+1                       1
+S                       1
+
+Habitat:
+Habitat
+(blank)    21746
+MS          4103
+PP          2396
+UNK         1695
+SPS         1609
+HH          1475
+CS           897
+CA           760
+SC           714
+PC           587
+BS           508
+MHS          374
+MG           354
+AD           337
+TS           178
+
+bears by Sex:
+Sex
+M          233
+F          179
+(blank)      3
+
+bears by AgeClass:
+AgeClass
+Adult       205
+Subadult    136
+Yearling     27
+Juvenile     22
+Cub          16
+(blank)       7
+Unknown       2
+
+Time column samples: ['930', '1820', '800', '1106', '920', '1018', '943', '1153', '1114', '1014', '1340', '1330']
+  real hours between fixes (10/25/50/75/90th): 19.70 / 44.67 / 94.12 / 141.37 / 196.29
+  share of gaps <= 1.1h 5%, <= 2.1h 6%, <= 4.1h 7%, <= 24h 15%; unparsed times: 2263
+  fixes per bear-day: median 1, 90th pct 1
+  bears with >= 30 fixes: 311, >= 100: 139
+  rows with missing/zero coordinates: 1
+
+================================================================================
+telemetry_camp_blanding
+GMT_TIME samples: ['6:00:50', '8:01:23', '9:00:42', '9:30:53', '10:01:07', '10:30:54', '11:00:21', '11:30:39']
+
+NAV:
+NAV
+3D    123772
+
+VALIDATED:
+VALIDATED
+Yes    123772
+
+DOP: {'count': 123772.0, 'mean': 3.69, 'std': 1.41, 'min': 1.2, '50%': 3.4, '90%': 5.6, '99%': 8.6, 'max': 12.6}
+
+fixes per bear:
+{'count': 16.0, 'mean': 7736.0, 'std': 4050.0, 'min': 1015.0, '25%': 4640.0, '50%': 7828.0, '75%': 10715.0, 'max': 13563.0}
+
+bear <-> collar pairs:
+Bear  Collar
+151   31669      7419
+152   31679      1955
+153   31674      7155
+154   31673     12945
+      31678       165
+155   31675      3661
+156   31670     13563
+157   31672      9697
+162   31679     11120
+164   32838      8571
+166   32839      2392
+167   31671      7405
+168   32835     10580
+169   32836     12927
+170   32837      8236
+171   31675      1015
+172   32834      4966
+  real hours between fixes (10/25/50/75/90th): 0.49 / 0.50 / 0.51 / 1.50 / 2.02
+  share of gaps <= 1.1h 74%, <= 2.1h 91%, <= 4.1h 97%, <= 24h 100%; unparsed times: 0
+  fixes per bear-day: median 23, 90th pct 26
+
+================================================================================
+roadkill
+SubType:
+SubType
+Carcass    5687
+Capture     421
+(blank)       8
+
+OrigCap:
+OrigCap
+(blank)    3991
+Yes        2087
+No           38
+
+rows with ReportDate 1900-01-01: 1
+
+roadkill by calendar month:
+{1.0: 457, 2.0: 168, 3.0: 139, 4.0: 221, 5.0: 481, 6.0: 483, 7.0: 444, 8.0: 320, 9.0: 483, 10.0: 954, 11.0: 1092, 12.0: 866}

@@ -1,0 +1,62 @@
+2026-11-17 01:19:39,216 INFO Fixes after cleaning and daily thinning: 39460 from 383 bears
+               bears  fixes      first       last
+group                                            
+apalachicola      23    977 1990-12-17 1993-03-29
+camp_blanding     16   5799 2011-06-30 2014-02-11
+eglin             34   2229 1994-11-13 1998-08-29
+gulf_coast        14   2033 1996-01-09 2003-05-24
+ocala            164  10585 1985-05-25 2007-09-08
+osceola           33   5679 1983-05-20 1999-12-29
+south_fl          69   7134 1986-05-07 1998-04-10
+wekiva            42   5024 1993-11-10 1995-12-29
+2026-11-17 01:19:39,360 INFO Housing by decade (SILVIS)...
+2026-11-17 01:19:40,343 INFO   housing blocks 100000 / 432959
+2026-11-17 01:19:41,100 INFO   housing blocks 200000 / 432959
+2026-11-17 01:19:41,592 INFO   housing blocks 300000 / 432959
+2026-11-17 01:19:42,156 INFO   housing blocks 400000 / 432959
+2026-11-17 01:19:42,373 INFO   housing blocks 432959 / 432959
+2026-11-17 01:19:42,809 INFO share of fixes outside the hexagon universe (dropped), by group: {'apalachicola': 0.005, 'eglin': 0.002, 'south_fl': 0.001}
+2026-11-17 01:19:43,002 INFO Design: 39439 used rows, 12646 available rows, 27 features
+2026-11-17 01:19:51,841 INFO Leave-one-area-out (each row: model trained without that area):
+               bears  auc_model  auc_range_map  boyce_model  boyce_range_map  topbin_model  topbin_range_map
+held_out                                                                                                    
+apalachicola      23      0.706          0.589        0.927            0.915         2.358             1.257
+camp_blanding     16      0.776          0.714        0.939            0.939         3.474             1.828
+eglin             34      0.774          0.749        0.830            0.964         1.578             2.102
+gulf_coast        14      0.848          0.773        0.936            0.636         3.577             5.136
+ocala            164      0.696          0.548        0.879           -0.297         1.241             0.903
+osceola           33      0.792          0.767        0.939            0.685         2.538             2.614
+south_fl          69      0.677          0.773        0.903            0.952         1.485             2.245
+wekiva            42      0.743          0.500        0.706           -0.406         0.009             1.040
+mean:
+auc_model           0.751
+auc_range_map       0.677
+boyce_model         0.882
+boyce_range_map     0.548
+topbin_model        2.033
+topbin_range_map    2.140
+2026-11-17 01:19:52,963 INFO Statewide habitat percentile by FWC range class (0 outside, 1 rare ... 4 frequent):
+             mean   size
+range_rank              
+0           0.370    606
+1           0.410   4731
+2           0.453  10421
+3           0.536   6672
+4           0.587   8639
+2026-11-17 01:19:52,964 INFO Top features:
+dist_bigcons_km            0.397
+lc_forested_wetland        0.074
+dist_major_road_km         0.070
+cons_share                 0.062
+lc_tree_plantation         0.041
+veg_pct_2019               0.038
+lc_open_wetland            0.036
+lc_agriculture             0.029
+lc_pine_scrub_upland       0.029
+lc_natural                 0.027
+lc_transport_extractive    0.021
+lc_hardwood_upland         0.021
+lc_water                   0.020
+hu_den_era                 0.016
+traffic_vkm_per_km2        0.016
+2026-11-17 01:19:52,966 INFO Wrote data/processed/habitat_h3r7.parquet

@@ -89,3 +89,53 @@ Status: **accepted** (2026-11-16).
 - Train on 2016-01 to 2024-12 with the winner's settings and fixed rounds; predict each month 2025-01 to 2026-10, one month ahead.
 - Report overall / per-year / within cold and never-seen hexagons, and 95% month-bootstrap ranges (model vs long-run average; full vs history among never-seen hexagons).
 - Run once. The report file locks it; no changes after seeing the result.
+
+### Step 4 result: final test (run once, 2025-01 to 2026-10, 5,487 conflicts)
+
+| score | capture@1% | capture@5% | never-seen, within@10% | pred/actual |
+|---|---|---|---|---|
+| long-run average | 0.450 | 0.803 | 0.109 | 0.81 |
+| GBM history-only | 0.520 | 0.836 | 0.558 | 0.89 |
+| **GBM full (final)** | **0.523** | **0.838** | **0.677** | **0.88** |
+
+- Full vs long-run average: capture@1% +7.3 pts [+5.8, +8.9], better in 22/22 months; capture@5% +3.5 [+2.5, +4.4].
+- Emerging risk: full vs history-only among never-seen hexagons (top 10%) +11.9 pts [+7.4, +16.9]. Matches validation (69–72%), so the landscape features are confirmed.
+- Validation and test scores agree: no sign of overfitting from tuning.
+- **Known limitation:** counts run low in record years (calibrated pred/actual 0.92 in 2025, 0.84 in 2026). Tree models can't predict above the range in their training data; 2025–26 statewide totals beat every training year. Rankings are unaffected.
+- Planned fix (production only, judged on months after 2026-10): rolling calibration, i.e. scale each month's predictions by actual/predicted over the previous 12 months.
+- Final model: data/models/gbm_h3r7_final_full.txt (Tweedie, 85 rounds, trained 2016–2024).
+
+## Phase 1 summary
+Pipeline: FWC calls → clean → H3 res-7 cell×month panel → history features (no peeking) + static landscape (SILVIS housing, FNAI conservation, FDOT roads/AADT, CLC v4 land cover) → LightGBM Tweedie → one-month-ahead risk per hexagon. Two products from one model: next-month risk (overall ranking) and emerging risk (ranking among hexagons with no recent conflicts).
+
+### Step 5: production forecast
+
+- `bearcast.models.predict` scores the month after the panel's last month with the final model.
+- Rolling calibration: actual / raw prediction over the last 12 out-of-sample months, refreshed every month. Rankings are unaffected.
+- Output per hexagon: expected calls, risk rank/percentile/tier (very high ≤1%, high ≤5%, elevated ≤20%), emerging-risk rank among hexagons with no conflict in 12 months.
+- The model is not retrained monthly for now. A retraining schedule is decided in Phase 2.
+
+## Phase 1.5 plan: bear layers (decided from the telemetry inspection)
+
+- Habitat use (resource selection): radio tracking 1983–2007 (12 studies, 415 bears) + Camp Blanding GPS 2011–14 (16 bears).
+  - Drop "Nuisance Relocation" bears and fixes of type Capture, Den, Den creep, Dropped collar, Nuisance, Mortality*, Removed, Injured.
+  - At most one fix per bear per day; equal weight per bear.
+  - Held-out groups: Ocala (3 studies), Osceola (2), Wekiva, South FL, Eglin, Apalachicola, Gulf coast (Chassahowitzka + Cedar Key), Camp Blanding.
+  - Housing matched to the decade of each fix where SILVIS allows (1990/2000/2010).
+- Movement: Camp Blanding GPS, 30-min fixes, all 3D/validated; ID = Bear (collars reused). Held-out bears for checking simulations.
+- Roadkill: Carcass + Capture (vehicle strike) = crossing events, an independent check for corridors. Seasonal weighting from roadkill months (Oct–Dec peak, May–Jul secondary).
+- Recent activity layer: sightings + conflicts + roadkill over the last 30/90 days, smoothed to neighbours.
+
+### Phase 1 close-out: first real forecast (2026-11)
+
+- 345 expected conflict calls statewide (Oct 2026 actual: 391); rolling calibration ×1.28 (last 12 months the raw model was 22% low).
+- Top hexagons: Okaloosa/Walton coast (Fort Walton Beach, Destin, Navarre, Santa Rosa Beach), plus Lake/Orange and Wakulla. Matches the Oct 2026 actual calls.
+- Busiest test month (Oct 2026): 88% of calls in the model's top 5%; 76% of quiet-hexagon conflicts inside the emerging-risk top 10%.
+- Emerging-risk leaders all had conflicts more than a year ago; the app should offer a "never had a conflict" filter (`never_conflict`).
+
+## Phase 1.5, step 1: recent activity + habitat use
+
+- `bearcast.features.activity`: sightings / conflicts / roadkill in the last 30 and 90 days per hexagon; days since last report; activity index = own + 0.5 × ring-1 + 0.25 × ring-2.
+- The FWC roadkill layer currently ends 2025-12-31, so the roadkill part of recent activity is empty until FWC updates it.
+- `bearcast.bears.habitat`: resource selection function (LightGBM binary, used vs available within ~10 km, weighted equally per bear), landscape + land-cover features only, housing matched to the decade of each fix.
+- Validation: leave-one-area-out over 8 groups (AUC, Boyce index, top-10% ratio), benchmarked against the FWC range map.
