@@ -40,7 +40,7 @@ def test_grid_features_classes_distances_and_crossing():
     f, valid = g.features(x0, y0, x1, y1, np.array([2000.0, 200.0]), np.zeros(2))
     i = M.FEATURES.index
     assert valid.all()
-    assert f[0, i("developed")] == 1 and f[1, i("forest_upland")] == 1
+    assert f[0, i("developed")] == 1 and f[1, :len(M.MODEL_CLASSES)].sum() == 0   # upland forest = reference
     assert f[0, i("crosses_busy_road")] == 1 and f[1, i("crosses_busy_road")] == 0
     _, valid_out = g.features(x0, y0, np.array([-50.0, 1e9]), y1, np.ones(2), np.zeros(2))
     assert not valid_out.any()

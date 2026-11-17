@@ -176,3 +176,13 @@ Pipeline: FWC calls → clean → H3 res-7 cell×month panel → history feature
 - Conditional logit with 10 alternatives per observed step; fit on 12 bears, tested on 4 held-out bears (14-day windows) against a null walker with the same step pool and no habitat preference.
 - App output: 25 sims × 14 days from each core and the 10 most active hexagons; reach share per hexagon at 7 and 14 days. Clearly labelled as simulation.
 - Caveat: all movement rules come from one area (Camp Blanding, 16 bears, 2011–14), and hourly steps assume no long-distance dispersal behaviour beyond what those bears showed.
+
+### Movement result
+
+- 123,718 GPS fixes → 44,068 hourly steps (16 bears). Median hourly step highest at dusk (140 m fall / 45 m rest); fall > rest in every period.
+- Step selection: crossing a busy road ×0.29 (z −4.0); steps away from any road preferred (z +10.8). Land classes relative to upland forest: wetlands highest, agriculture and open water lowest (re-run with forest as reference for clean SEs).
+- Held-out (4 bears, 34 windows): 14-day spread 4.69 vs real 4.70 km (null 5.85); busy crossings/day 0.005 vs 0.000 (null 0.104); natural cover 80% vs 79% (null 51%); developed 2.8% vs 2.2% (null 10%). Daily displacement: sims too even (median 1.0 vs 0.7 km, 90th pct 2.5 vs 3.1 km): no memory / home-range return.
+- App framing: "typical movement over two weeks" (median 5–7 km from start), not dispersal; built from one area (Camp Blanding, 2011–14).
+
+## Phase 1.5 complete
+Layers ready for the app: next-month conflict risk + emerging risk, recent activity, likely habitat, corridors + candidate crossing sites, road risk, simulated movement + reach.

@@ -54,7 +54,8 @@ GROUP_TO_CLASS = {"hardwood_upland": 0, "pine_scrub_upland": 0, "tree_plantation
                   "open_wetland": 3, "shrub_coastal_barren": 4, "agriculture": 5, "urban_high": 6, "urban_low": 6,
                   "rural_developed": 6, "transport_extractive": 6, "water": 7}
 OTHER, OUTSIDE = 8, 255
-FEATURES = [*CLASSES, "log_dist_road", "log_dist_busy_road", "crosses_busy_road", "log_step", "cos_turn"]
+MODEL_CLASSES = CLASSES[1:]                    # upland forest (and the rare 'other') is the reference
+FEATURES = [*MODEL_CLASSES, "log_dist_road", "log_dist_busy_road", "crosses_busy_road", "log_step", "cos_turn"]
 CONTINUOUS = ["log_dist_road", "log_dist_busy_road", "log_step"]
 PERIODS = ["night", "dawn", "day", "dusk"]
 N_CONTROL, N_CANDIDATES = 10, 20
@@ -130,19 +131,20 @@ class Grid:
         k = self.cls[r, c]
         valid = inside & (k != OUTSIDE)
         f = np.zeros((*np.shape(x1), len(FEATURES)), dtype=np.float32)
-        for i in range(len(CLASSES)):
-            f[..., i] = k == i
-        f[..., 8] = np.log1p(self.d_road[r, c] / 100.0)
-        f[..., 9] = np.log1p(self.d_busy[r, c] / 100.0)
+        for j, name in enumerate(MODEL_CLASSES):
+            f[..., j] = k == CLASSES.index(name)
+        col = FEATURES.index
+        f[..., col("log_dist_road")] = np.log1p(self.d_road[r, c] / 100.0)
+        f[..., col("log_dist_busy_road")] = np.log1p(self.d_busy[r, c] / 100.0)
         # crossing = starts off the busy-road band and touches it somewhere along the step (24 samples)
         frac = np.linspace(1 / 24, 1.0, 24)
         xs = x0[..., None] + (x1 - x0)[..., None] * frac
         ys = y0[..., None] + (y1 - y0)[..., None] * frac
         rr, cc, _ = self.rc(xs, ys)
         r0, c0, _ = self.rc(x0, y0)
-        f[..., 10] = (self.busy[r0, c0] == 0) & (self.busy[rr, cc].max(axis=-1) == 1)
-        f[..., 11] = np.log1p(sl)
-        f[..., 12] = np.cos(np.nan_to_num(turn))
+        f[..., col("crosses_busy_road")] = (self.busy[r0, c0] == 0) & (self.busy[rr, cc].max(axis=-1) == 1)
+        f[..., col("log_step")] = np.log1p(sl)
+        f[..., col("cos_turn")] = np.cos(np.nan_to_num(turn))
         return f, valid
 
     def save(self, path: Path) -> None:
@@ -364,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
     scaler = Scaler(obs[:, idx].mean(axis=0), obs[:, idx].std(axis=0) + 1e-9)
     beta, se = fit_clogit(scaler(X), valid)
     coef = pd.DataFrame({"coef": beta, "se": se, "z": beta / np.where(se > 0, se, np.nan)}, index=FEATURES)
-    log.info("Step-selection coefficients (land classes vs 'other'; continuous ones standardised):\n%s",
+    log.info("Step-selection coefficients (land classes vs upland forest; continuous ones standardised):\n%s",
              coef.round(3).to_string())
 
     # fair test on held-out bears

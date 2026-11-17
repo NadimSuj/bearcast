@@ -1,9 +1,5 @@
-2026-11-17 02:05:10,263 INFO Building 100 m covariate grids (one-time, can take a few minutes)...
-/Users/nadimulsujan05/Projects/bearcast/.venv/lib/python3.14/site-packages/pyogrio/raw.py:200: UserWarning: Measured (M) geometry types are not supported. Original type 'Measured LineString' is converted to 'LineString'
-  return ogr_read(
-2026-11-17 02:06:15,846 INFO   grids (7360, 7469) built in 66s
-2026-11-17 02:06:16,300 INFO 123718 GPS fixes -> 44068 hourly steps (31751 with a turning angle) from 16 bears; held out: ['162', '152', '166', '167']
-2026-11-17 02:06:16,318 INFO Hourly step length (m) by season and time of day:
+2026-11-17 02:13:19,481 INFO 123718 GPS fixes -> 44068 hourly steps (31751 with a turning angle) from 16 bears; held out: ['162', '152', '166', '167']
+2026-11-17 02:13:19,498 INFO Hourly step length (m) by season and time of day:
                  count    50%    90%
 season period                       
 fall   dawn     6477.0   27.0  573.0
@@ -14,42 +10,41 @@ rest   dawn    10325.0   16.0  367.0
        day      4495.0   13.0  178.0
        dusk     9150.0   45.0  548.0
        night    3521.0   12.0  217.0
-2026-11-17 02:06:17,090 INFO Step-selection coefficients (land classes vs 'other'; continuous ones standardised):
+2026-11-17 02:13:20,298 INFO Step-selection coefficients (land classes vs upland forest; continuous ones standardised):
                      coef     se       z
-forest_upland       0.231  1.800   0.128
-plantation         -0.065  1.800  -0.036
-forested_wetland    0.697  1.800   0.387
-open_wetland        0.840  1.801   0.467
-shrub              -0.023  1.804  -0.013
-agriculture        -0.579  1.807  -0.320
-developed          -0.063  1.801  -0.035
-water              -0.991  1.804  -0.549
-log_dist_road       0.359  0.033  10.751
-log_dist_busy_road  0.030  0.042   0.724
-crosses_busy_road  -1.237  0.306  -4.043
-log_step            0.074  0.007   9.936
-cos_turn            0.013  0.009   1.381
-2026-11-17 02:06:19,064 INFO Held-out check: 34 real 14-day windows from 4 bears, 10 sims each:
+plantation         -0.296  0.032  -9.163
+forested_wetland    0.466  0.028  16.574
+open_wetland        0.610  0.049  12.355
+shrub              -0.253  0.116  -2.188
+agriculture        -0.808  0.164  -4.937
+developed          -0.294  0.056  -5.233
+water              -1.221  0.132  -9.264
+log_dist_road       0.359  0.033  10.760
+log_dist_busy_road  0.030  0.042   0.721
+crosses_busy_road  -1.233  0.305  -4.036
+log_step            0.074  0.007   9.924
+cos_turn            0.013  0.009   1.385
+2026-11-17 02:13:22,272 INFO Held-out check: 34 real 14-day windows from 4 bears, 10 sims each:
                                      disp24_median_km  disp24_p90_km  spread14d_median_km  busy_crossings_per_day  share_natural_cover  share_developed
 real held-out bears                             0.700          3.112                4.699                   0.000                0.787            0.022
-step-selection sims                             1.007          2.470                4.694                   0.005                0.800            0.028
+step-selection sims                             1.006          2.457                4.694                   0.005                0.801            0.027
 null walker (no habitat preference)             1.048          2.562                5.853                   0.104                0.507            0.101
-2026-11-17 02:06:21,088 INFO App simulations: 15 starts x 25 bears x 14 days. Distance from start after 14 days (km):
+2026-11-17 02:13:24,592 INFO App simulations: 15 starts x 25 bears x 14 days. Distance from start after 14 days (km):
                           50%   90%   max
 start                                    
-core: Big Cypress         7.5  12.9  15.9
+core: Big Cypress         6.0  11.1  14.8
 core: Eglin-Apalachicola  5.0  11.1  14.2
-core: Highlands/Glades    5.5  12.8  14.3
-core: Ocala/St. Johns     5.3  10.2  16.8
-core: Osceola             4.6  11.2  13.8
-recent activity #1        5.8   9.8  14.8
-recent activity #2        4.7   7.4  13.7
-recent activity #3        4.6  10.8  13.6
-recent activity #4        6.0  10.0  15.4
-recent activity #5        4.0   7.9  10.6
-recent activity #6        2.9   8.3  12.9
-recent activity #7        6.4  11.2  13.4
+core: Highlands/Glades    7.3  12.9  14.3
+core: Ocala/St. Johns     5.2  10.2  16.8
+core: Osceola             4.9  11.2  13.8
+recent activity #1        7.0  10.2  14.8
+recent activity #2        5.3   9.3  12.1
+recent activity #3        4.9  10.8  13.6
+recent activity #4        6.0   8.9  15.4
+recent activity #5        4.2  10.0  13.4
+recent activity #6        3.6   6.6  12.9
+recent activity #7        7.0  13.7  19.4
 recent activity #8        5.9  12.9  14.3
-recent activity #9        7.1  11.5  14.8
-recent activity #10       5.3   8.5   9.7
-2026-11-17 02:06:21,091 INFO Wrote data/processed/movement_sims_h3r7.parquet and data/processed/movement_reach_h3r7.parquet
+recent activity #9        7.0  12.8  14.8
+recent activity #10       4.9   8.5   9.7
+2026-11-17 02:13:24,595 INFO Wrote data/processed/movement_sims_h3r7.parquet and data/processed/movement_reach_h3r7.parquet
