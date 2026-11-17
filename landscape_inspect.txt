@@ -1,0 +1,165 @@
+=== Files under data/raw/landscape ===
+  .DS_Store  (0.0 MB)
+  conservation/.DS_Store  (0.0 MB)
+  conservation/flma_meta.htm  (0.2 MB)
+  housing/FL_wui_block_1990_2020_change_v4.cpg  (0.0 MB)
+  housing/FL_wui_block_1990_2020_change_v4.dbf  (619.1 MB)
+  housing/FL_wui_block_1990_2020_change_v4.prj  (0.0 MB)
+  housing/FL_wui_block_1990_2020_change_v4.sbn  (3.8 MB)
+  housing/FL_wui_block_1990_2020_change_v4.sbx  (0.1 MB)
+  housing/FL_wui_block_1990_2020_change_v4.shp  (453.7 MB)
+  housing/FL_wui_block_1990_2020_change_v4.shp.xml  (0.0 MB)
+  housing/FL_wui_block_1990_2020_change_v4.shx  (3.5 MB)
+  landcover/.DS_Store  (0.0 MB)
+  landcover/CLC_v4_Raster_SITE.lyrx  (0.1 MB)
+  landcover/CLC_v4_Raster_STATE.lyrx  (0.2 MB)
+  landcover/Land Cover Classification-Revision-2018.pdf  (0.5 MB)
+  roads/Basemap_routes.cpg  (0.0 MB)
+  roads/Basemap_routes.dbf  (8.1 MB)
+  roads/Basemap_routes.prj  (0.0 MB)
+  roads/Basemap_routes.sbn  (0.2 MB)
+  roads/Basemap_routes.sbx  (0.0 MB)
+  roads/Basemap_routes.shp  (20.1 MB)
+  roads/Basemap_routes.shp.xml  (0.1 MB)
+  roads/Basemap_routes.shx  (0.2 MB)
+  roads/TSO 2.xsl  (0.3 MB)
+  roads/TSO.xsl  (0.3 MB)
+  roads/aadt.cpg  (0.0 MB)
+  roads/aadt.dbf  (10.4 MB)
+  roads/aadt.lyr  (0.0 MB)
+  roads/aadt.prj  (0.0 MB)
+  roads/aadt.sbn  (0.2 MB)
+  roads/aadt.sbx  (0.0 MB)
+  roads/aadt.shp  (9.7 MB)
+  roads/aadt.shp.xml  (0.1 MB)
+  roads/aadt.shx  (0.2 MB)
+  roads/basemap_routes.lyr  (0.0 MB)
+
+=== File Geodatabase: conservation/FloridaConservationLands.gdb ===
+  layer 'flma': MultiPolygon, 3,435 features, crs EPSG:3087
+      MA_ID                        float64
+      MANAME                       object
+      MAJORMA                      object
+      MATYPE                       object
+      MANAGING_A                   object
+      MATYPE2                      object
+      OWNER                        object
+      COOWNERS                     object
+      OWNERTYPES                   object
+      TOTACRES                     float64
+      LTF_ACRES                    float64
+      ESMT_HOLD                    object
+      COUNTY                       object
+      PROTSTAT                     float64
+      DESCRIPT                     object
+      COMMENTS                     object
+      MANAGER                      object
+      MGRINST                      object
+      MGRCITY                      object
+      MGRPHONE                     object
+      MA_WEBSITE                   object
+      MANAME_AB                    object
+      DIGBND_SRC                   object
+      CITATION                     object
+      Shape_Length                 float64
+      Shape_Area                   float64
+    first rows:
+          MA_ID                         MANAME                        MAJORMA MATYPE                     MANAGING_A  MATYPE2                       OWNER COOWNERS OWNERTYPES  TOTACRES  LTF_ACRES ESMT_HOLD    COUNTY  PROTSTAT                       DESCRIPT                       COMMENTS                        MANAGER                        MGRINST         MGRCITY      MGRPHONE                     MA_WEBSITE              MANAME_AB                     DIGBND_SRC                       CITATION  Shape_Length    Shape_Area
+      0    89.0          John Chesnut Sr. Park                             ZZ  LPIPI                Pinellas County    Local             Pinellas County       ZZ          L     255.0        0.0        ZZ  Pinellas       3.0                             ZZ  Boundaries in GIS (1994-09...  STEVEN J. HARPER, ENVIRONM...  Pinellas County Parks and ...  Tarpon Springs  727-453-6933  https://pinellas.gov/parks...     John Chesnut Sr Pk  COMBINATION OF DIGITAL BOU...  Florida Natural Areas Inve...   6805.151458  1.048572e+06
+      1   124.0  Little Mullet Key Research...  Key West National Wildlife...  FFWRN  US Dept. of the Interior, ...  Federal  US Fish & Wildlife Service       ZZ    F-USFWS      18.0        0.0        ZZ    Monroe       1.0  This research natural area...  Boundaries in GIS (1980-03...                 REFUGE MANAGER  U. S. Fish & Wildlife Service    Big Pine Key  305-872-2239  https://www.fws.gov/about/...  Little Mullet Key RNA   FNAI MAPPING AND DIGITIZING.  Florida Natural Areas Inve...    998.210233  6.850865e+04
+      2  1073.0        John S. Phipps Preserve                             ZZ  PNCNC         The Nature Conservancy  Private      The Nature Conservancy       ZZ          P      40.0        0.0        ZZ  Franklin       1.0  Located on the west end of...  Boundaries in GIS (1987 bo...                 DAVID PRINTISS  The Nature Conservancy NW ...         Bristol  850-643-2756  https://www.nature.org/en-...        J. S. Phipps Pr   FNAI MAPPING AND DIGITIZING.  Florida Natural Areas Inve...   3971.844059  3.013975e+05
+
+=== File Geodatabase: landcover/CLC_v4_Raster.gdb ===
+  (not readable as vector: 'data/raw/landscape/landcover/CLC_v4_Raster.gdb' not recognized as being in a supported file format.; It might help to specify the correct driver explicitly by prefixing the file path with '<DRIVER>:', e.g. 'CSV:path'.)
+
+=== Vector: housing/FL_wui_block_1990_2020_change_v4.shp ===
+  layer 'FL_wui_block_1990_2020_change_v4': Polygon, 432,959 features, crs PROJCS["NAD_1983_Albers",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]],PROJECTION["Albers_Conic_Equal_Area"],PARAMETER["latitude_of_center",23],PARAMETER["longitude_of_center",-96],PARAMETER["standard_parallel_1",29.5],PARAMETER["standard_parallel_2",45.5],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH]]
+      BLK20                        object
+      WATER20                      int32
+      AWATER20PC                   float64
+      POP2020                      int64
+      HU2020                       int64
+      OCCHU2020                    int64
+      VACHU2020                    int64
+      POPDEN2020                   float64
+      HUDEN2020                    float64
+      OCCHUDEN20                   float64
+      VACHUDEN20                   float64
+      PUBFLAG                      int64
+      STATE                        object
+      HU1990                       int64
+      HU2000                       int64
+      HU2010                       int64
+      HUDEN1990                    float64
+      HUDEN2000                    float64
+      HUDEN2010                    float64
+      VEG1992PC                    float64
+      VEG2001PC                    float64
+      VEG2011PC                    float64
+      VEG2019PC                    float64
+      WUIFLAG199                   int64
+      WUICLASS19                   object
+      WUIFLAG200                   int64
+      WUICLASS20                   object
+      WUIFLAG201                   int64
+      WUICLASS_1                   object
+      WUIFLAG202                   int64
+      WUICLASS_2                   object
+      BUFVEG                       int32
+      Shape_Leng                   float64
+      Shape_Area                   float64
+    first rows:
+                   BLK20  WATER20  AWATER20PC  POP2020  HU2020  OCCHU2020  VACHU2020  POPDEN2020  HUDEN2020  OCCHUDEN20  VACHUDEN20  PUBFLAG STATE  HU1990  HU2000  HU2010  HUDEN1990  HUDEN2000  HUDEN2010  VEG1992PC  VEG2001PC  VEG2011PC  VEG2019PC  WUIFLAG199         WUICLASS19  WUIFLAG200         WUICLASS20  WUIFLAG201         WUICLASS_1  WUIFLAG202         WUICLASS_2  BUFVEG  Shape_Leng   Shape_Area
+      0  120010002011024        0         0.0        0       0          0          0         0.0        0.0         0.0         0.0        0    FL       0       0       0        0.0        0.0        0.0        0.0        0.0        0.0        0.0           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg       0  148.441493  1123.407997
+      1  120010002012004        0         0.0        0       0          0          0         0.0        0.0         0.0         0.0        0    FL       0       0       0        0.0        0.0        0.0        0.0        0.0        0.0        0.0           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg       0  383.354732  1780.452199
+      2  120010002012005        0         0.0        0       0          0          0         0.0        0.0         0.0         0.0        0    FL       0       0       0        0.0        0.0        0.0        0.0        0.0        0.0        0.0           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg           0  Uninhabited_NoVeg       0  240.972783  1199.931553
+
+=== Vector: roads/Basemap_routes.shp ===
+  layer 'Basemap_routes': LineString, 20,704 features, crs EPSG:26917
+      ROAD_ID                      int64
+      ROADWAY                      object
+      BEGIN_POST                   float64
+      END_POST                     float64
+      RTLENGTH                     float64
+      RD_STATUS                    object
+      HIGHMEASUR                   float64
+      NUMSECTION                   int64
+      COUNTY                       object
+      SECTION                      object
+      OID2                         int64
+      SHAPE_LEN                    float64
+    first rows:
+          ROAD_ID   ROADWAY  BEGIN_POST  END_POST  RTLENGTH RD_STATUS  HIGHMEASUR  NUMSECTION COUNTY SECTION   OID2    SHAPE_LEN
+      0  89095026  89095026         0.0     0.365  0.367521        07       0.365           2     89  095026     67   591.468473
+      1  89095024  89095024         0.0     0.356  0.351139        07       0.356           2     89  095024     68   565.103342
+      2  75320810  75320810         0.0     1.358  1.358000        10       1.358           3     75  320810  62085  2186.205990
+
+=== Vector: roads/aadt.shp ===
+  layer 'aadt': LineString, 21,580 features, crs EPSG:26917
+      YEAR_                        int32
+      DISTRICT                     object
+      COSITE                       object
+      ROADWAY                      object
+      DESC_FRM                     object
+      DESC_TO                      object
+      AADT                         int64
+      AADTFLG                      object
+      KFLG                         object
+      K100FLG                      object
+      DFLG                         object
+      TFLG                         object
+      COUNTYDOT                    object
+      COUNTY                       object
+      MNG_DIST                     object
+      BEGIN_POST                   float64
+      END_POST                     float64
+      KFCTR                        float64
+      K100FCTR                     float64
+      DFCTR                        float64
+      TFCTR                        float64
+      Shape_Leng                   float64
+    first rows:
+         YEAR_ DISTRICT  COSITE   ROADWAY              DESC_FRM    DESC_TO   AADT AADTFLG KFLG K100FLG DFLG TFLG COUNTYDOT   COUNTY MNG_DIST  BEGIN_POST  END_POST  KFCTR  K100FCTR  DFCTR  TFCTR  Shape_Leng
+      0   2025        5  705119  70100000  SR-520 WB/WILLARD ST  SR-520 WB  16500       C    F       F    F    A        70  Brevard        5       8.831     9.955    9.0       0.0   99.9    1.4   1809.2658
+      1   2025        2  389001  38510000                 SR-55      US-27   1400       C    F       F    F    F        38   Taylor        2       0.000     1.750    9.0       0.0   55.6    4.0   2816.3692
+      2   2025        5  702006  70220119               I-95 SB     CR-516  14500       S    F       F    W    2        70  Brevard        5       0.000     0.295    9.0       0.0   99.9    3.2    475.5846

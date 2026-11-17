@@ -1,0 +1,29 @@
+2026-11-16 21:52:56,702 INFO base         val2023:  218 rounds, dev 0.03849, 22s
+2026-11-16 21:53:25,749 INFO base         val2024:  302 rounds, dev 0.03195, 29s
+2026-11-16 21:53:49,485 INFO leaves31     val2023:  367 rounds, dev 0.03838, 24s
+2026-11-16 21:54:31,755 INFO leaves31     val2024:  680 rounds, dev 0.03184, 42s
+2026-11-16 21:54:55,040 INFO leaves127    val2023:  155 rounds, dev 0.03873, 23s
+2026-11-16 21:55:29,379 INFO leaves127    val2024:  242 rounds, dev 0.03230, 34s
+2026-11-16 21:55:54,691 INFO minleaf1000  val2023:  238 rounds, dev 0.03781, 25s
+2026-11-16 21:56:25,740 INFO minleaf1000  val2024:  284 rounds, dev 0.03202, 31s
+2026-11-16 21:56:47,024 INFO minleaf100   val2023:  203 rounds, dev 0.03858, 21s
+2026-11-16 21:57:14,844 INFO minleaf100   val2024:  268 rounds, dev 0.03206, 28s
+2026-11-16 21:57:58,995 INFO slow_lr      val2023:  528 rounds, dev 0.03769, 44s
+2026-11-16 21:59:04,489 INFO slow_lr      val2024:  759 rounds, dev 0.03167, 65s
+2026-11-16 21:59:44,411 INFO ff0.5        val2023:  288 rounds, dev 0.03844, 40s
+2026-11-16 22:00:43,699 INFO ff0.5        val2024:  424 rounds, dev 0.03219, 59s
+2026-11-16 22:00:59,729 INFO tweedie      val2023:   91 rounds, dev 0.03728, 16s
+2026-11-16 22:01:16,334 INFO tweedie      val2024:   79 rounds, dev 0.03166, 17s
+2026-11-16 22:01:16,370 INFO Mean over the two validation years (sorted by Poisson deviance):
+             rounds  poisson_dev  pred/actual  capture@1%  capture@5%  cold@10%  never@10%
+config                                                                                    
+tweedie        85.0      0.03447       0.9230      0.5007      0.8539    0.8305     0.7076
+slow_lr       643.5      0.03468       0.9860      0.5008      0.8534    0.8251     0.7035
+minleaf1000   261.0      0.03491       0.9795      0.4915      0.8514    0.8230     0.7084
+leaves31      523.5      0.03511       0.9882      0.4879      0.8542    0.8321     0.7130
+base          260.0      0.03522       0.9777      0.4941      0.8512    0.8240     0.7002
+minleaf100    235.5      0.03532       0.9750      0.4877      0.8542    0.8278     0.6950
+ff0.5         356.0      0.03532       1.0024      0.4903      0.8544    0.8232     0.7076
+leaves127     198.5      0.03551       0.9569      0.4882      0.8515    0.8242     0.6946
+2026-11-16 22:01:16,370 INFO Winner: tweedie (85 rounds on average)
+2026-11-16 22:01:16,373 INFO Wrote data/models/best_params_h3r7.json

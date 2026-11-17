@@ -32,3 +32,60 @@ Status: **accepted** (2026-11-16).
 - 22 features: own-cell lags and sums, months since last conflict, encounters and bear-welfare calls,
   neighbour sums (ring 1 and 2), statewide level and year-over-year signal, season, range level, location.
 - Scoring: % of each month's conflicts in the top 1/5/10% of cells. Simple baselines set the bar the ML model must beat.
+
+## Step 2b: landscape features (housing, conservation, roads)
+
+- `bearcast.features.landscape` → `data/processed/landscape_h3r7.parquet`, one row per cell, 15 static features.
+- All area/length work in EPSG:3087 (Florida Albers, equal-area metres).
+- Housing: SILVIS 2020 blocks assigned to the hex containing each block's interior point. Densities = units or people / hex km². WUI 2020 (`WUICLASS_2`) intermix/interface area shares. Vegetation % is area-weighted.
+- Conservation: FNAI FLMA clipped per hex and merged within each hex (overlaps counted once). Distances from the hex centre to any conservation land and to areas of 10,000+ acres.
+- Roads: FDOT basemap km/km², AADT × km per km², max AADT, distance to a road with 10,000+ AADT. AADT is 2025 only, so it is treated as static.
+- Treated as static (no time dimension). Housing is 2020 and traffic 2025, so values may sit slightly "ahead" of 2016–2019 rows. Accepted because these change slowly.
+- Land cover: CLC v4 **STATE** raster (77 classes, mapped consistently statewide; SITE detail is only partial). rasterio's bundled GDAL can't read File Geodatabase rasters, so it is converted once to a tiled GeoTIFF with Homebrew GDAL (`gdal_translate`). `bearcast.features.landcover` → `landcover_h3r7.parquet`: 13 group shares by code prefix, plus no-data share, natural-cover share and Shannon diversity. Each pixel counts toward the hexagon containing its centre.
+
+## Step 3: first model (LightGBM, Poisson)
+
+- Pixel values in the CLC STATE raster are plain 4–5 digit codes; grouping by leading digits handles that. 1830 (Rural, unspecified) → rural_developed. 1800, 7000, 9100 → other.
+- Hexagons outside Florida (from the ring of neighbours) have no CLC or SILVIS coverage: lc_nodata ≈ 1 and zero housing. A handful of cells; the model can use lc_nodata as a flag.
+- `bearcast.models.train_gbm`: LightGBM, Poisson objective, target = conflicts per hexagon-month.
+- Folds: train ≤2022 → validate 2023 (high year); train ≤2023 → validate 2024 (low year). Test (2025+) is never loaded.
+- Early stopping on the validation year, so validation scores are slightly optimistic; the test period stays clean for the final number.
+- Two feature sets: history (22) vs full (history + 15 landscape + 16 land cover), to measure what the landscape adds.
+- Metrics (`bearcast.models.evaluate`): capture@1%/5%, cold capture@1%/5% (hexagons with no conflict in the prior 12 months), Poisson deviance, pred/actual.
+- Baselines: long-run average (conf_hist_rate) and last-12-months sum.
+
+### Step 3 results (validation; test still untouched)
+
+| fold | score | capture@1% | capture@5% | pred/actual |
+|---|---|---|---|---|
+| 2023 | long-run avg | 0.435 | 0.810 | 0.82 |
+| 2023 | GBM full | 0.512 | 0.858 | 0.99 |
+| 2024 | long-run avg | 0.436 | 0.814 | 1.13 |
+| 2024 | GBM full | 0.476 | 0.844 | 0.97 |
+
+- The GBM beats the baselines in both years. Its biggest gain is calibration across boom and bust years (statewide trend features); Poisson deviance is about 40% lower.
+- The top features are cell history, then neighbours, then season; lat/lon add little, so the model isn't memorising the map.
+- History-only vs full differ by about ±1 point, within noise. Likely cause: the long-run rate already encodes the landscape. Next: rank within cold/never-seen cells to test landscape where history is missing.
+
+### Step 3b: diagnostics, landscape is kept
+
+- Overall capture: full vs history-only is a tie (95% ranges straddle 0). Known hotspots dominate the top slots.
+- Ranking within cold hexagons (no conflict in 12 months): full beats history by +3.1 pts at 5% [+1.1, +5.2] and +4.5 pts at 10% [+2.2, +7.0].
+- Ranking within never-seen hexagons (no conflict since 2015), top 10%: long-run avg ≈ 13–14% (random), history-only 52–57%, **full 69–72%**, in both years.
+- Decision: keep the full model. The app shows two views from the same predictions: overall next-month risk, and **emerging risk** (ranking among hexagons with no recent history).
+
+### Step 3c: tuning round
+
+- 8 settings × 2 folds, full features. Winner chosen by a rule fixed before the run: lowest mean Poisson deviance across folds. Saved to data/models/best_params_h3r7.json with its mean best round count.
+
+### Step 3c result: tuning
+
+- All 8 settings within ~3% on mean deviance; capture@5% 85.1–85.4%. The model isn't sensitive to these settings.
+- Winner by the pre-registered rule: **Tweedie (variance power 1.2), 85 rounds**, mean deviance 0.0345 (base 0.0352).
+- Tweedie under-predicts by ~8% (pred/actual 0.92). Fixed before the test: multiply predictions by 1 / (mean validation pred/actual) ≈ 1.08. Rankings are unchanged; only the counts move.
+
+### Step 4: final test plan (written before running)
+
+- Train on 2016-01 to 2024-12 with the winner's settings and fixed rounds; predict each month 2025-01 to 2026-10, one month ahead.
+- Report overall / per-year / within cold and never-seen hexagons, and 95% month-bootstrap ranges (model vs long-run average; full vs history among never-seen hexagons).
+- Run once. The report file locks it; no changes after seeing the result.
