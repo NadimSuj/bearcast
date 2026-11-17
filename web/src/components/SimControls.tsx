@@ -13,25 +13,31 @@ interface Props {
 }
 
 export function SimControls({ starts, selected, onSelect, hour, maxHour, playing, onPlay, onSeek }: Props) {
+  const day = Math.min(14, Math.floor(hour / 24) + 1)
   return (
-    <div className="section">
-      <h4>Simulated movement</h4>
-      <select value={selected ?? ''} onChange={e => onSelect(e.target.value === '' ? null : Number(e.target.value))}>
-        <option value="">None</option>
+    <section className="sb-section">
+      <p className="eyebrow">Simulated movement</p>
+      <p className="sb-sub">Where bears could wander from a starting point</p>
+      <select className="sb-select" value={selected ?? ''} onChange={e => onSelect(e.target.value === '' ? null : Number(e.target.value))}>
+        <option value="">Choose a starting point…</option>
         {starts.map(s => <option key={s.start_id} value={s.start_id}>{s.start_label}</option>)}
       </select>
       {selected !== null && (
         <>
-          <div className="row">
-            <button onClick={() => onPlay(!playing)}>{playing ? 'Pause' : 'Play'}</button>
+          <div className="player">
+            <button className="play" onClick={() => onPlay(!playing)} aria-label={playing ? 'Pause' : 'Play'}>
+              {playing
+                ? <svg width="12" height="14" viewBox="0 0 12 14"><rect width="4" height="14" fill="currentColor" /><rect x="8" width="4" height="14" fill="currentColor" /></svg>
+                : <svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="currentColor" /></svg>}
+            </button>
             <input type="range" min={0} max={maxHour} step={1} value={Math.floor(hour)} onChange={e => onSeek(Number(e.target.value))} />
-            <span className="small">day {Math.floor(hour / 24) + 1}</span>
+            <span className="day">Day {day}<span> / 14</span></span>
           </div>
-          <p className="small muted">25 simulated bears following movement rules learned from GPS-collared bears.
-            A picture of typical wandering over two weeks, not real animals or dispersal.
-            Orange hexagons: darker = more of the simulated bears got there within 14 days.</p>
+          <p className="sb-note">25 simulated bears following movement rules learned from GPS-collared bears: typical wandering
+            over two weeks, not real animals or dispersal. Orange hexagons: darker = more of them got there.</p>
+          <button className="sb-link" onClick={() => onSelect(null)}>Clear simulation</button>
         </>
       )}
-    </div>
+    </section>
   )
 }

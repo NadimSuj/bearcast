@@ -38,3 +38,12 @@ Emerging risk got its own API layer because most emerging hexagons sit in the "l
   Key West can still be centred when zoomed in.
 - Hexagons inside a population core are left out of the corridors layer and the corridor line in the details panel:
   their corridor value is always 0 (a bear there is already home), which read as "the best corridor".
+## Design refresh
+- Brand colours: Wilderness Green #1A4314 (sidebar, panel headers), Everglades Sage #4A7856, Sandy Trail #E6D3B3
+  (cards, active controls), Black Bear #1A1A1A, Sunburnt Amber #C86428 (selection, accents), Swamp Water Blue #3B5C66
+  (labels, corridor routes). They live in `web/src/theme.ts` and the CSS variables at the top of `index.css`.
+- Layout: a fixed sidebar on the left and the map filling the rest, so the sidebar never hides part of Florida.
+  The bear logo sits in a badge in the map's top-right corner; the hexagon panel opens below it.
+- Layer palettes were shifted toward the brand (rust / amber / sand for risk, greens for habitat, swamp blues for emerging risk).
+- Simulated tracks no longer fade: each bear's whole path so far stays solid, 4 px wide over a dark 7 px casing,
+  in ten saturated colours that read on the colour, light and satellite base maps.

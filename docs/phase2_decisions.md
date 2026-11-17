@@ -22,3 +22,10 @@
 - Rolling calibration: each scored month's raw predictions (calibrated ÷ factor) are appended to `oos_h3r7.parquet`, seeded from the final-test predictions; the forecast calibrates on its latest 12 months.
 - The forecast is skipped when no new month is complete, so re-running is harmless. Late-reported calls for an already-forecast month don't trigger a new forecast; they show up in that month's score.
 - The model itself is not retrained by the job; a retraining schedule (e.g. yearly, after a new final test) is a separate, deliberate step.
+
+## Step 4: API
+- `bearcast.api.app` (FastAPI, run with `uvicorn bearcast.api.app:app --reload`; docs at `/docs`).
+- Endpoints: health, runs ("as of" dates), point lookup, nearby, top / emerging, map layers, corridor routes, simulations (tracks + reach), forecast scores.
+- Map layers come in two formats: GeoJSON (built in SQL) or H3 rows (`?format=h3`, ~5× smaller; the front end draws hexagons from their IDs). `?bbox=west,south,east,north` limits to the visible area.
+- Gzip on (JSON layers shrink 5–10×); CORS allows local front-end dev servers (ports 5173, 3000); lat/lon validated to Florida bounds (422 otherwise).
+- DB engine created on first request (importing the app needs no database; tests inject the test database).
