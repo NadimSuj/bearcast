@@ -1,0 +1,174 @@
+2026-11-17 08:34:39,680 INFO === download
+2026-11-17 08:34:40,607 INFO Black Bear Calls Recent: 14365 features, fetching in chunks of 2000
+2026-11-17 08:34:40,905 INFO   2000 / 14365
+2026-11-17 08:34:41,463 INFO   4000 / 14365
+2026-11-17 08:34:42,107 INFO   6000 / 14365
+2026-11-17 08:34:42,689 INFO   8000 / 14365
+2026-11-17 08:34:43,412 INFO   10000 / 14365
+2026-11-17 08:34:43,923 INFO   12000 / 14365
+2026-11-17 08:34:44,950 INFO   14000 / 14365
+2026-11-17 08:34:45,452 INFO   14365 / 14365
+2026-11-17 08:34:45,932 INFO Wrote data/raw/fwc_calls_recent.parquet (14365 rows)
+2026-11-17 08:34:46,591 INFO Black Bear Related Calls in Florida: 100227 features, fetching in chunks of 2000
+2026-11-17 08:34:46,872 INFO   2000 / 100227
+2026-11-17 08:34:47,384 INFO   4000 / 100227
+2026-11-17 08:34:47,898 INFO   6000 / 100227
+2026-11-17 08:34:48,470 INFO   8000 / 100227
+2026-11-17 08:34:49,011 INFO   10000 / 100227
+2026-11-17 08:34:49,660 INFO   12000 / 100227
+2026-11-17 08:34:50,163 INFO   14000 / 100227
+2026-11-17 08:34:50,667 INFO   16000 / 100227
+2026-11-17 08:34:51,184 INFO   18000 / 100227
+2026-11-17 08:34:51,701 INFO   20000 / 100227
+2026-11-17 08:34:52,228 INFO   22000 / 100227
+2026-11-17 08:34:52,741 INFO   24000 / 100227
+2026-11-17 08:34:53,250 INFO   26000 / 100227
+2026-11-17 08:34:53,762 INFO   28000 / 100227
+2026-11-17 08:34:54,287 INFO   30000 / 100227
+2026-11-17 08:34:54,857 INFO   32000 / 100227
+2026-11-17 08:34:55,367 INFO   34000 / 100227
+2026-11-17 08:34:55,876 INFO   36000 / 100227
+2026-11-17 08:34:56,377 INFO   38000 / 100227
+2026-11-17 08:34:56,882 INFO   40000 / 100227
+2026-11-17 08:34:57,381 INFO   42000 / 100227
+2026-11-17 08:34:57,878 INFO   44000 / 100227
+2026-11-17 08:34:58,369 INFO   46000 / 100227
+2026-11-17 08:34:58,928 INFO   48000 / 100227
+2026-11-17 08:34:59,422 INFO   50000 / 100227
+2026-11-17 08:34:59,921 INFO   52000 / 100227
+2026-11-17 08:35:00,442 INFO   54000 / 100227
+2026-11-17 08:35:00,975 INFO   56000 / 100227
+2026-11-17 08:35:01,486 INFO   58000 / 100227
+2026-11-17 08:35:02,018 INFO   60000 / 100227
+2026-11-17 08:35:02,774 INFO   62000 / 100227
+2026-11-17 08:35:03,639 INFO   64000 / 100227
+2026-11-17 08:35:04,145 INFO   66000 / 100227
+2026-11-17 08:35:04,655 INFO   68000 / 100227
+2026-11-17 08:35:05,282 INFO   70000 / 100227
+2026-11-17 08:35:05,839 INFO   72000 / 100227
+2026-11-17 08:35:06,498 INFO   74000 / 100227
+2026-11-17 08:35:07,037 INFO   76000 / 100227
+2026-11-17 08:35:07,581 INFO   78000 / 100227
+2026-11-17 08:35:08,120 INFO   80000 / 100227
+2026-11-17 08:35:08,634 INFO   82000 / 100227
+2026-11-17 08:35:09,186 INFO   84000 / 100227
+2026-11-17 08:35:09,692 INFO   86000 / 100227
+2026-11-17 08:35:10,197 INFO   88000 / 100227
+2026-11-17 08:35:10,712 INFO   90000 / 100227
+2026-11-17 08:35:11,224 INFO   92000 / 100227
+2026-11-17 08:35:11,733 INFO   94000 / 100227
+2026-11-17 08:35:12,297 INFO   96000 / 100227
+2026-11-17 08:35:12,810 INFO   98000 / 100227
+2026-11-17 08:35:13,316 INFO   100000 / 100227
+2026-11-17 08:35:13,673 INFO   100227 / 100227
+2026-11-17 08:35:14,834 INFO Wrote data/raw/fwc_calls_open.parquet (100227 rows)
+2026-11-17 08:35:15,093 INFO Black Bear Roadkill Locations: 6116 features, fetching in chunks of 2000
+2026-11-17 08:35:16,089 INFO   2000 / 6116
+2026-11-17 08:35:16,550 INFO   4000 / 6116
+2026-11-17 08:35:17,496 INFO   6000 / 6116
+2026-11-17 08:35:17,816 INFO   6116 / 6116
+2026-11-17 08:35:18,174 INFO Wrote data/raw/fwc_roadkill.parquet (6116 rows)
+2026-11-17 08:35:18,174 INFO     download done in 38s
+2026-11-17 08:35:18,174 INFO === clean
+2026-11-17 08:35:18,310 INFO Open Data layer: 12492 of 100227 rows fall between 2022-12-31 and 2025-01-01
+2026-11-17 08:35:18,343 INFO Dropped 903 incidents present in more than one layer
+2026-11-17 08:35:18,587 INFO Wrote data/interim/calls_clean.parquet: 106285 calls, 1980-10-02 to 2026-10-31
+2026-11-17 08:35:18,590 INFO By class:
+call_class
+attractant_property    45292
+sighting               41641
+bear_welfare           11915
+pets_livestock          4002
+admin_other             1859
+human_safety            1576
+2026-11-17 08:35:18,590 INFO Conflict calls: 50870 | encounter calls: 92511 | repeat rows: 792
+2026-11-17 08:35:18,604 INFO Calls per year since 2015, by source layer:
+source_layer  historical  open_gapfill  recent
+year                                          
+2015                5822             0       0
+2016                4982             0       0
+2017                5932             0       0
+2018                5283             0       0
+2019                5105             0       0
+2020                5538             0       0
+2021                5365             0       0
+2022                5484             0       0
+2023                   0          7054       0
+2024                   0          5438       0
+2025                   0             0    7450
+2026                   0             0    6012
+2026-11-17 08:35:18,618 INFO     clean done in 0s
+2026-11-17 08:35:18,618 INFO === panel
+2026-11-17 08:35:18,660 INFO Window: 2015-01-01 to 2026-10-01, H3 resolution 7
+2026-11-17 08:35:25,647 INFO Filtering: {'calls_in_window': 69465, 'dropped_repeat': 591, 'dropped_low_precision': 498, 'dropped_default_geocode': 309, 'events_kept': 68067}
+2026-11-17 08:35:25,648 INFO   n_cells                            31069
+2026-11-17 08:35:25,648 INFO   n_cells_in_range                   30463
+2026-11-17 08:35:25,648 INFO   n_cells_with_any_conflict          3702
+2026-11-17 08:35:25,648 INFO   n_months                           142
+2026-11-17 08:35:25,648 INFO   n_rows                             4411798
+2026-11-17 08:35:25,648 INFO   pct_cell_months_with_conflict      0.46
+2026-11-17 08:35:25,648 INFO   mean_conflict_per_cell_month       0.0067
+2026-11-17 08:35:25,648 INFO   max_conflict_in_one_cell_month     20
+2026-11-17 08:35:25,648 INFO   pct_conflicts_in_top5pct_cells     89.7
+2026-11-17 08:35:25,648 INFO   rows_by_split                      {'train': 3355452, 'test': 683518, 'val': 372828}
+2026-11-17 08:35:25,648 INFO   conflicts_by_split                 {'test': 5487, 'train': 21967, 'val': 2139}
+2026-11-17 08:35:25,648 INFO Wrote data/processed/panel_h3r7_month.parquet
+2026-11-17 08:35:25,677 INFO     panel done in 7s
+2026-11-17 08:35:25,677 INFO === features
+2026-11-17 08:35:28,531 INFO rows           4038970
+2026-11-17 08:35:28,531 INFO cells          31069
+2026-11-17 08:35:28,531 INFO months         2016-01-01 to 2026-10-01
+2026-11-17 08:35:28,531 INFO rows_by_split  {'train': 2982624, 'test': 683518, 'val': 372828}
+2026-11-17 08:35:28,531 INFO nan_counts     {'state_conf_yoy3': 93207}
+2026-11-17 08:35:28,531 INFO Wrote data/processed/features_h3r7_month.parquet (22 features)
+2026-11-17 08:35:28,533 INFO     features done in 3s
+2026-11-17 08:35:28,533 INFO === load_reference
+2026-11-17 08:35:30,281 INFO hexagons           31069 rows
+2026-11-17 08:35:34,696 INFO calls             106285 rows
+2026-11-17 08:35:35,496 INFO monthly_counts     39297 rows
+2026-11-17 08:35:35,496 INFO     load_reference done in 7s
+2026-11-17 08:35:35,496 INFO === score
+2026-11-17 08:35:35,559 INFO no forecast is waiting for a score (data complete through 2026-10)
+2026-11-17 08:35:35,559 INFO     score done in 0s
+2026-11-17 08:35:35,559 INFO === predict
+2026-11-17 08:35:35,572 INFO no new complete month (data through 2026-10, latest forecast already uses it): forecast skipped
+2026-11-17 08:35:35,572 INFO === activity
+2026-11-17 08:35:36,172 INFO as_of                2026-10-31
+2026-11-17 08:35:36,172 INFO reports_last_30d     {'sighting': 247, 'conflict': 375, 'roadkill': 0}
+2026-11-17 08:35:36,172 INFO reports_last_90d     {'sighting': 789, 'conflict': 1115, 'roadkill': 0}
+2026-11-17 08:35:36,172 INFO newest_roadkill      2025-12-31
+2026-11-17 08:35:36,172 INFO hexagons_by_level    {'none': 25893, 'low': 3168, 'high': 1071, 'moderate': 937}
+2026-11-17 08:35:36,172 INFO Wrote data/processed/activity_h3r7.parquet
+2026-11-17 08:35:36,173 INFO     activity done in 1s
+2026-11-17 08:35:36,173 INFO === load_outputs
+2026-11-17 08:35:36,181 INFO forecast: these files are already loaded (fingerprint a764309f58b48e98), skipping
+2026-11-17 08:35:36,181 INFO forecast               0 rows
+2026-11-17 08:35:36,184 INFO activity: these files are already loaded (fingerprint fb5f1f87c6dacb45), skipping
+2026-11-17 08:35:36,185 INFO activity               0 rows
+2026-11-17 08:35:36,185 INFO     load_outputs done in 0s
+2026-11-17 08:35:36,185 INFO Summary:
+{
+  "steps": [
+    "download",
+    "clean",
+    "panel",
+    "features",
+    "load_reference",
+    "score",
+    "predict",
+    "activity",
+    "load_outputs"
+  ],
+  "load_reference": {
+    "hexagons": 31069,
+    "calls": 106285,
+    "monthly_counts": 39297
+  },
+  "data_through": "2026-10-01",
+  "scores": [],
+  "forecast": "skipped",
+  "load_outputs": {
+    "forecast": 0,
+    "activity": 0
+  }
+}

@@ -5,10 +5,11 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 from sqlalchemy import Engine, create_engine
 
-load_dotenv()
+load_dotenv(find_dotenv(usecwd=True))   # .env in the folder you run commands from (the repo root)
+load_dotenv()                           # fallback: search upward from this package (never overrides)
 
 
 def database_url(var: str = "DATABASE_URL") -> str:

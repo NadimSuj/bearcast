@@ -272,8 +272,12 @@ def load_all(eng: Engine, steps: Sequence[str] = STEPS, processed: Path = PROCES
              "movement": lambda c: load_movement(c, processed, tag)}
     out = {}
     for step in [s for s in STEPS if s in steps]:          # always in dependency order
-        with eng.begin() as conn:                           # one transaction per step
-            out[step] = funcs[step](conn)
+        try:
+            with eng.begin() as conn:                       # one transaction per step
+                out[step] = funcs[step](conn)
+        except FileNotFoundError as e:                      # that output hasn't been produced yet
+            log.warning("%-15s skipped: %s not found", step, Path(e.filename or str(e)).name)
+            continue
         log.info("%-15s %8d rows", step, out[step])
     return out
 
