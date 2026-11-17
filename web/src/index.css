@@ -1,0 +1,39 @@
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; }
+body { font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1f2328; }
+.app { position: relative; height: 100%; }
+
+.card { position: absolute; z-index: 1; background: rgba(255, 255, 255, 0.96); border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18); padding: 14px 16px; }
+.sidebar { top: 12px; left: 12px; width: 330px; max-height: calc(100% - 24px); overflow-y: auto; }
+.details { top: 12px; right: 12px; width: 360px; max-height: calc(100% - 24px); overflow-y: auto; }
+
+h1 { font-size: 20px; margin: 0 0 4px; }
+h3 { margin: 0 0 2px; font-size: 16px; }
+h4 { margin: 12px 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: #57606a; }
+p { margin: 4px 0; }
+.section { border-top: 1px solid #eaeef2; margin-top: 10px; padding-top: 2px; }
+.muted { color: #57606a; }
+.small { font-size: 12.5px; }
+.tiny { font-size: 11px; margin-top: 12px; }
+.error { color: #b30000; }
+
+.radio { display: flex; align-items: center; gap: 8px; padding: 3px 0; cursor: pointer; }
+.legend { list-style: none; padding: 0; margin: 6px 0 0; }
+.legend li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 1px 0; }
+.legend span { width: 18px; height: 12px; border-radius: 2px; border: 1px solid rgba(0, 0, 0, 0.15); }
+
+.row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.row input[type=range] { flex: 1; }
+select, button { font: inherit; padding: 4px 8px; border-radius: 6px; border: 1px solid #d0d7de; background: #fff; }
+select { width: 100%; }
+button { cursor: pointer; }
+
+.close { position: absolute; top: 6px; right: 8px; border: none; font-size: 20px; line-height: 1; background: none; }
+.facts { padding-left: 18px; margin: 4px 0; }
+.facts li { margin: 2px 0; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: #fff; background: #8c959f; }
+.tier-very-high { background: #b30000; }
+.tier-high { background: #e6550d; }
+.tier-elevated { background: #d9a400; }
+.tier-low { background: #8c959f; }

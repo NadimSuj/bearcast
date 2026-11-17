@@ -3,7 +3,9 @@
   at_point(lat, lon)            everything we know about the hexagon containing a point
   nearby(lat, lon, km, limit)   hexagons within km of a point, ranked by next month's risk
   top_hexagons(n, emerging)     the n highest-risk hexagons (or emerging-risk ones) statewide
-  layer_geojson(layer)          a whole map layer as a GeoJSON FeatureCollection, built in the database
+  layer_geojson(layer, bbox)    a map layer as a GeoJSON FeatureCollection, built in the database
+  layer_rows(layer, bbox)       the same layer as rows keyed by H3 id (lighter, for H3-aware map libraries)
+  latest_runs / forecast_scores / corridor_paths / sim_starts / sim_tracks / sim_reach
 
 Usage (demo):
     python -m bearcast.db.queries --lat 30.41 --lon -86.75
@@ -57,6 +59,7 @@ LIMIT :n
 
 LAYERS = {   # layer name -> (view, property columns, filter)
     "forecast": ("latest_forecast", ["cell", "tier", "expected_calls", "risk_rank", "emerging_rank"], "tier <> 'low'"),
+    "emerging": ("latest_forecast", ["cell", "emerging_rank", "emerging_pct", "expected_calls", "never_conflict"], "emerging_pct <= 0.10"),
     "activity": ("latest_activity", ["cell", "activity_level", "reports_90d", "days_since_report"], "activity_level <> 'none'"),
     "habitat": ("latest_bear_layers", ["cell", "habitat_pct", "core"], "true"),
     "corridors": ("latest_bear_layers", ["cell", "corridor_value", "corridor_pair", "on_best_path"], "corridor_value <= 0.15"),
@@ -80,18 +83,97 @@ def top_hexagons(eng: Engine, n: int = 10, emerging: bool = False) -> list[dict]
         return [dict(r) for r in c.execute(text(TOP), {"n": n, "emerging": emerging}).mappings()]
 
 
-def layer_geojson(eng: Engine, layer: str) -> dict:
-    """The database assembles the GeoJSON itself (json_build_object + ST_AsGeoJSON)."""
+def _bbox_clause(bbox: tuple[float, float, float, float] | None) -> tuple[str, dict]:
+    if bbox is None:
+        return "", {}
+    w, s_, e, n = bbox
+    return " AND geom && ST_MakeEnvelope(:w, :s, :e, :n, 4326)", {"w": w, "s": s_, "e": e, "n": n}
+
+
+def layer_geojson(eng: Engine, layer: str, bbox: tuple[float, float, float, float] | None = None) -> dict:
+    """The database assembles the GeoJSON itself (json_build_object + ST_AsGeoJSON).
+    bbox = (west, south, east, north) limits it to what's on screen."""
     view, cols, where = LAYERS[layer]
     props = ", ".join(f"'{c}', {c}" for c in cols)
+    box, params = _bbox_clause(bbox)
     sql = f"""
     SELECT json_build_object('type', 'FeatureCollection', 'features', coalesce(json_agg(json_build_object(
              'type', 'Feature', 'geometry', ST_AsGeoJSON(geom, 6)::json,
              'properties', json_build_object({props}))), '[]'::json))
-    FROM {view} WHERE {where}
+    FROM {view} WHERE {where}{box}
+    """
+    with eng.connect() as c:
+        return c.execute(text(sql), params).scalar()
+
+
+def layer_rows(eng: Engine, layer: str, bbox: tuple[float, float, float, float] | None = None) -> list[dict]:
+    """The same layer as plain rows keyed by H3 id: much smaller than GeoJSON, for map libraries that draw
+    H3 hexagons themselves (deck.gl H3HexagonLayer, h3-js)."""
+    view, cols, where = LAYERS[layer]
+    box, params = _bbox_clause(bbox)
+    with eng.connect() as c:
+        return [dict(r) for r in c.execute(text(f"SELECT {', '.join(cols)} FROM {view} WHERE {where}{box}"), params).mappings()]
+
+
+def latest_runs(eng: Engine) -> list[dict]:
+    """What each layer is based on, for 'as of' labels in the app."""
+    with eng.connect() as c:
+        return [dict(r) for r in c.execute(text(
+            "SELECT kind, run_id, data_through, created_at, metrics FROM latest_runs ORDER BY kind")).mappings()]
+
+
+def forecast_scores(eng: Engine) -> list[dict]:
+    with eng.connect() as c:
+        return [dict(r) for r in c.execute(text(
+            "SELECT month, conflicts, expected_total, capture_1pct, capture_5pct, emerging_capture_10 "
+            "FROM forecast_scores ORDER BY month")).mappings()]
+
+
+def corridor_paths(eng: Engine) -> dict:
+    sql = """
+    SELECT json_build_object('type', 'FeatureCollection', 'features', coalesce(json_agg(json_build_object(
+             'type', 'Feature', 'geometry', ST_AsGeoJSON(geom, 6)::json,
+             'properties', json_build_object('pair', pair, 'length_km', length_km,
+                                             'busy_road_hexagons', busy_road_hexagons))), '[]'::json))
+    FROM corridor_paths WHERE geom IS NOT NULL
+      AND run_id = (SELECT run_id FROM latest_runs WHERE kind = 'bear_layers')
     """
     with eng.connect() as c:
         return c.execute(text(sql)).scalar()
+
+
+MOVEMENT_RUN = "(SELECT run_id FROM latest_runs WHERE kind = 'movement')"
+
+
+def sim_starts(eng: Engine) -> list[dict]:
+    sql = f"""
+    SELECT s.start_id, s.start_label, s.start_cell,
+           round(ST_Y(h.centroid)::numeric, 5) AS lat, round(ST_X(h.centroid)::numeric, 5) AS lon
+    FROM sim_starts s LEFT JOIN hexagons h ON h.cell = s.start_cell
+    WHERE s.run_id = {MOVEMENT_RUN} ORDER BY s.start_id
+    """
+    with eng.connect() as c:
+        return [dict(r) for r in c.execute(text(sql)).mappings()]
+
+
+def sim_tracks(eng: Engine, start_id: int) -> dict:
+    """Simulated tracks from one start as GeoJSON lines; vertex i of each line = hour i (for animation)."""
+    sql = f"""
+    SELECT json_build_object('type', 'FeatureCollection', 'features', coalesce(json_agg(json_build_object(
+             'type', 'Feature', 'geometry', ST_AsGeoJSON(geom, 5)::json,
+             'properties', json_build_object('sim', sim, 'start_label', start_label)) ORDER BY sim), '[]'::json))
+    FROM sim_tracks WHERE run_id = {MOVEMENT_RUN} AND start_id = :sid
+    """
+    with eng.connect() as c:
+        return c.execute(text(sql), {"sid": start_id}).scalar()
+
+
+def sim_reach(eng: Engine, start_id: int) -> list[dict]:
+    """Share of simulated bears reaching each hexagon (H3 ids; some may lie outside the main hexagon set)."""
+    with eng.connect() as c:
+        return [dict(r) for r in c.execute(text(
+            f"SELECT cell, p_7d, p_14d FROM sim_reach WHERE run_id = {MOVEMENT_RUN} AND start_id = :sid "
+            "ORDER BY p_14d DESC"), {"sid": start_id}).mappings()]
 
 
 def main(argv: list[str] | None = None) -> int:
