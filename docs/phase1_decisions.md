@@ -19,3 +19,16 @@ Status: **accepted** (2026-11-16).
   folds (2023 high, 2024 low).
 - Default-geocode rule kept (309 events, 0.4%). Some flagged 4-decimal Panhandle points may be real
   problem properties; revisit if needed.
+
+
+## Step 1 result after the ring fix
+- Universe: 31,069 cells (30,463 in range + 606 outside). Outside-range rate is now 1.83 conflicts per cell
+  (was 5.21, inflated because only cells with calls were included).
+
+## Step 2a: history features
+- Forecast question: conflicts in a cell THIS month, using only information up to LAST month.
+- Rule: every feature for month t uses only months before t (enforced by a test).
+- 2015 is history only; feature rows start 2016-01. Training is now 2016-2023.
+- 22 features: own-cell lags and sums, months since last conflict, encounters and bear-welfare calls,
+  neighbour sums (ring 1 and 2), statewide level and year-over-year signal, season, range level, location.
+- Scoring: % of each month's conflicts in the top 1/5/10% of cells. Simple baselines set the bar the ML model must beat.
