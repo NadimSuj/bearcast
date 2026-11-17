@@ -33,3 +33,8 @@ Emerging risk got its own API layer because most emerging hexagons sit in the "l
   imports `maplibre-gl-worker.mjs?url` and passes it to `setWorkerUrl`.
 - The production bundle is ~1.2 MB gzip-compressed to ~350 KB, mostly MapLibre and deck.gl. The size warning is raised to 2 MB.
 - Clicking anywhere calls `/api/point` and opens the details panel (forecast, activity, habitat, corridor, road, landscape).
+- The view is kept on Florida: the map centre is clamped to the state's bounding box (−87.7 to −79.9, 24.5 to 31.0),
+  zoom is limited to 5.8–14, and rotation/tilt are off. Clamping the centre rather than the edges means Pensacola and
+  Key West can still be centred when zoomed in.
+- Hexagons inside a population core are left out of the corridors layer and the corridor line in the details panel:
+  their corridor value is always 0 (a bear there is already home), which read as "the best corridor".

@@ -40,7 +40,7 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
           <h4>Bears and landscape</h4>
           <ul className="facts">
             <li>Habitat percentile <b>{pct(info.habitat_pct)}</b>{info.core ? ` · inside the ${info.core} population core` : ''}</li>
-            {info.corridor_pair && <li>Corridor {info.corridor_pair} · route {pct(info.corridor_value)} costlier than the best</li>}
+            {info.corridor_pair && !info.core && <li>Corridor {info.corridor_pair} · route {pct(info.corridor_value)} costlier than the best</li>}
             <li>Road risk {num(info.road_risk, 2)} · busiest road {num(info.max_aadt)} vehicles/day</li>
             <li>{num(info.hu_den_2020)} homes per km² · {pct(info.cons_share)} conservation land · {pct(info.lc_natural)} natural cover</li>
           </ul>

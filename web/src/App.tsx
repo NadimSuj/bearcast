@@ -14,7 +14,17 @@ import { Details } from './components/Details'
 import { SimControls } from './components/SimControls'
 
 const BASEMAP = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
-const FLORIDA: MapViewState = { longitude: -83.2, latitude: 28.4, zoom: 6, pitch: 0, bearing: 0 }
+// keep the map on Florida: the centre can't leave this box and you can't zoom out past the state
+const BOUNDS = { west: -87.7, east: -79.9, south: 24.5, north: 31.0 }
+const MIN_ZOOM = 5.8
+const MAX_ZOOM = 14
+const FLORIDA: MapViewState = { longitude: -83.2, latitude: 28.4, zoom: 6, pitch: 0, bearing: 0, minZoom: MIN_ZOOM, maxZoom: MAX_ZOOM }
+
+const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x))
+function keepInFlorida(v: MapViewState): MapViewState {
+  return { ...v, longitude: clamp(v.longitude, BOUNDS.west, BOUNDS.east), latitude: clamp(v.latitude, BOUNDS.south, BOUNDS.north),
+           zoom: clamp(v.zoom, MIN_ZOOM, MAX_ZOOM), pitch: 0, bearing: 0 }
+}
 const SIM_HOURS = 14 * 24
 const MS_PER_HOUR = 50          // playback speed: two simulated weeks in about 17 seconds
 
@@ -144,9 +154,9 @@ export default function App() {
 
   return (
     <div className="app">
-      <DeckGL viewState={viewState} onViewStateChange={e => setViewState(e.viewState as MapViewState)}
-              controller layers={layers} onClick={onClick} getTooltip={tooltip}>
-        <Map mapStyle={BASEMAP} />
+      <DeckGL viewState={viewState} onViewStateChange={e => setViewState(keepInFlorida(e.viewState as MapViewState))}
+              controller={{ dragRotate: false, touchRotate: false }} layers={layers} onClick={onClick} getTooltip={tooltip}>
+        <Map mapStyle={BASEMAP} renderWorldCopies={false} />
       </DeckGL>
 
       <aside className="card sidebar">
