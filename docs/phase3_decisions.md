@@ -46,4 +46,8 @@ Emerging risk got its own API layer because most emerging hexagons sit in the "l
   The bear logo sits in a badge in the map's top-right corner; the hexagon panel opens below it.
 - Layer palettes were shifted toward the brand (rust / amber / sand for risk, greens for habitat, swamp blues for emerging risk).
 - Simulated tracks no longer fade: each bear's whole path so far stays solid, 4 px wide over a dark 7 px casing,
-  in ten saturated colours that read on the colour, light and satellite base maps.
+  in ten saturated colours that read on the colour, terrain and light base maps.
+- Terrain base map: a physical map built in `web/src/terrain.ts`. Land is coloured by elevation (AWS Terrain Tiles,
+  Terrarium encoding) with MapLibre's `color-relief` layer plus light hillshading, on top of CARTO Voyager with roads,
+  buildings and land-use fills hidden, so water, rivers, borders and place names remain. Because Florida only reaches
+  105 m, the colours run green (sea level) → yellow (~45 m) → tan/brown (105 m) instead of a continental scale.

@@ -14,22 +14,12 @@ import { BRAND } from './theme'
 import { Details } from './components/Details'
 import { longDate } from './format'
 import { SimControls } from './components/SimControls'
+import { ELEVATION_STOPS, VOYAGER, loadTerrainStyle } from './terrain'
 
-// base maps: all free, no API key. Satellite is Esri's World Imagery tiles.
-const SATELLITE: StyleSpecification = {
-  version: 8,
-  sources: {
-    esri: {
-      type: 'raster', tileSize: 256, maxzoom: 19,
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-      attribution: 'Imagery © Esri, Maxar, Earthstar Geographics',
-    },
-  },
-  layers: [{ id: 'esri', type: 'raster', source: 'esri' }],
-}
+// base maps: all free, no API key. Terrain is built in terrain.ts: Florida coloured by elevation, with hillshading.
 const BASEMAPS = {
-  color: { label: 'Colour', style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json' as string | StyleSpecification },
-  satellite: { label: 'Satellite', style: SATELLITE as string | StyleSpecification },
+  color: { label: 'Colour', style: VOYAGER as string | StyleSpecification },
+  terrain: { label: 'Terrain', style: VOYAGER as string | StyleSpecification },   // swapped for the physical style once it loads
   light: { label: 'Light', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json' as string | StyleSpecification },
 }
 type BasemapName = keyof typeof BASEMAPS
@@ -74,6 +64,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [viewState, setViewState] = useState<MapViewState>(FLORIDA)
   const [basemap, setBasemap] = useState<BasemapName>('color')
+  const [terrainStyle, setTerrainStyle] = useState<StyleSpecification | null>(null)
 
   // first load: run dates and simulation starts
   useEffect(() => {
@@ -86,6 +77,12 @@ export default function App() {
     if (rows[layerName]) return
     api.layer(layerName).then(r => setRows(prev => ({ ...prev, [layerName]: r }))).catch(e => setError(e.message))
   }, [layerName, rows])
+
+  // the physical (terrain) base map is built the first time it's chosen
+  useEffect(() => {
+    if (basemap === 'terrain' && !terrainStyle)
+      loadTerrainStyle().then(setTerrainStyle).catch(e => setError(`Terrain map unavailable: ${e.message}`))
+  }, [basemap, terrainStyle])
 
   useEffect(() => {
     if (showPaths && !paths) api.paths().then(setPaths).catch(e => setError(e.message))
@@ -225,6 +222,13 @@ export default function App() {
               <button key={b} className={b === basemap ? 'active' : ''} onClick={() => setBasemap(b)}>{BASEMAPS[b].label}</button>
             ))}
           </div>
+          {basemap === 'terrain' && (
+            <div className="elev">
+              <div className="elev-bar" style={{ background: `linear-gradient(to right, ${ELEVATION_STOPS.map(([m, c]) => `${c} ${(m / 105) * 100}%`).join(', ')})` }} />
+              <div className="elev-labels"><span>Sea level</span><span>50 m</span><span>105 m</span></div>
+              <p className="sb-note">Land elevation, stretched to Florida's range (highest point: Britton Hill, 105 m).</p>
+            </div>
+          )}
         </section>
 
         <section className="sb-section">
@@ -250,7 +254,7 @@ export default function App() {
       <main className="map">
         <DeckGL viewState={viewState} onViewStateChange={e => setViewState(keepInFlorida(e.viewState as MapViewState))}
                 controller={{ dragRotate: false, touchRotate: false }} layers={layers} onClick={onClick} getTooltip={tooltip}>
-          <Map mapStyle={BASEMAPS[basemap].style} renderWorldCopies={false} />
+          <Map mapStyle={basemap === 'terrain' ? (terrainStyle ?? VOYAGER) : BASEMAPS[basemap].style} renderWorldCopies={false} />
         </DeckGL>
         <div className="logo" title="BearCast"><img src="/bearcast-logo.png" alt="BearCast logo" /></div>
         <Details info={point} error={pointError} onClose={() => { setPoint(null); setPointError(null) }} />
