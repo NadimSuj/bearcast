@@ -94,3 +94,12 @@ def test_sim_tracks_view_builds_ordered_lines(eng):
     with eng.connect() as c:
         wkt = c.execute(text("SELECT ST_AsText(geom) FROM sim_tracks WHERE run_id = :r"), {"r": run}).scalar()
     assert wkt == "LINESTRING(-81.7 29.2,-81.69 29.2,-81.68 29.2)"
+
+def test_database_url_adds_driver_for_hosted_urls(monkeypatch):
+    from bearcast.db import database_url
+    monkeypatch.setenv("X_URL", "postgresql://u:p@ep-1.neon.tech/neondb?sslmode=require")
+    assert database_url("X_URL") == "postgresql+psycopg://u:p@ep-1.neon.tech/neondb?sslmode=require"
+    monkeypatch.setenv("X_URL", "postgres://u:p@host/db")
+    assert database_url("X_URL") == "postgresql+psycopg://u:p@host/db"
+    monkeypatch.setenv("X_URL", "postgresql+psycopg://localhost:5432/bearcast")
+    assert database_url("X_URL") == "postgresql+psycopg://localhost:5432/bearcast"

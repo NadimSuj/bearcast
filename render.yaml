@@ -1,0 +1,37 @@
+# Render Blueprint: the BearCast API (Python) and web map (static site), both on Render's free plan.
+# The database lives on Neon (free Postgres + PostGIS). Step-by-step guide: docs/deploy.md
+services:
+  - type: web
+    name: bearcast-api
+    runtime: python
+    plan: free
+    branch: master
+    buildCommand: pip install -r requirements-api.txt && pip install --no-deps .
+    startCommand: uvicorn bearcast.api.app:app --host 0.0.0.0 --port $PORT --proxy-headers
+    buildFilter:
+      paths:
+        - src/**
+        - requirements-api.txt
+        - pyproject.toml
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.14.3"
+      - key: DATABASE_URL          # Neon connection string (entered in the Render dashboard, never committed)
+        sync: false
+      - key: CORS_ORIGINS          # the web map's address, e.g. https://bearcast.onrender.com
+        sync: false
+
+  - type: web
+    name: bearcast
+    runtime: static
+    branch: master
+    rootDir: web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "24.14.1"
+      - key: VITE_API_BASE         # the API's address, e.g. https://bearcast-api.onrender.com
+        sync: false
+      - key: VITE_MAPTILER_KEY     # MapTiler key for the Color and Artistic base maps
+        sync: false

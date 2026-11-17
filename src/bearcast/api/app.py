@@ -20,6 +20,7 @@ Endpoints
 
 from __future__ import annotations
 
+import os
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
@@ -34,12 +35,18 @@ FL_LAT = {"ge": 24.0, "le": 31.5}      # Florida-ish bounds, so typos get a clea
 FL_LON = {"ge": -88.0, "le": -79.5}
 
 
+def allowed_origins() -> list[str]:
+    """Local dev servers, plus any comma-separated origins in CORS_ORIGINS (e.g. the deployed web map's address)."""
+    extra = [o.strip().rstrip("/") for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+    return ["http://localhost:5173", "http://localhost:3000", *extra]
+
+
 def create_app(eng: Engine | None = None, cors_origins: list[str] | None = None) -> FastAPI:
     app = FastAPI(title="BearCast API", version="0.1.0",
                   description="Florida black bear conflict forecasts, recent activity, habitat, corridors and "
                               "simulated movement. Data: Florida Fish and Wildlife Conservation Commission (FWC).")
     app.state.engine = eng
-    app.add_middleware(CORSMiddleware, allow_origins=cors_origins or ["http://localhost:5173", "http://localhost:3000"],
+    app.add_middleware(CORSMiddleware, allow_origins=cors_origins or allowed_origins(),
                        allow_methods=["GET"], allow_headers=["*"])
     app.add_middleware(GZipMiddleware, minimum_size=1000)    # map layers are big JSON; gzip shrinks them ~5-10x
 

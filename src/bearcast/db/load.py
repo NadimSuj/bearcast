@@ -286,9 +286,10 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--only", nargs="+", choices=STEPS, default=STEPS)
     p.add_argument("--res", type=int, default=7)
+    p.add_argument("--url-var", default="DATABASE_URL", help="environment variable holding the database URL")
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    eng = engine()
+    eng = engine(args.url_var)
     load_all(eng, args.only, res=args.res)
     with eng.connect() as conn:
         counts = {t: conn.execute(text(f"SELECT count(*) FROM {t}")).scalar() for t in

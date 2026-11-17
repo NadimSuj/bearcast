@@ -233,6 +233,8 @@ one command keeps everything current each month:
 python -m bearcast.jobs.monthly
 ```
 
+To put BearCast online (free hosting on Neon and Render), follow [`docs/deploy.md`](docs/deploy.md).
+
 Run the tests with `python -m pytest -q`. The database tests need `TEST_DATABASE_URL` in `.env`, pointing
 at a separate test database.
 

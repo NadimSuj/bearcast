@@ -51,3 +51,16 @@ Emerging risk got its own API layer because most emerging hexagons sit in the "l
   The key lives in web/.env.local as VITE_MAPTILER_KEY (git-ignored); without it the button is disabled.
   A note under the buttons says it is an artistic map made for looks, not navigation.
 - Color base map: the user's MapTiler map (id 01a1eae1-…), same key as Artistic; falls back to CARTO Voyager without a key.
+
+## Deployment
+- Free hosting: database on Neon (Postgres + PostGIS, 1 GB free), API as a Render free web service, web map as a
+  Render static site. Both Render services are defined in `render.yaml`; step-by-step guide in `docs/deploy.md`.
+- The API installs only what it imports (`requirements-api.txt`), not the data-science stack.
+- Connection strings stay out of git: `DATABASE_URL` is set in Render's dashboard; locally, Neon's goes in `.env` as
+  `NEON_DATABASE_URL`, used via `--url-var NEON_DATABASE_URL` on `migrate`, `load` and the monthly job.
+  `postgres://` / `postgresql://` URLs get the psycopg driver added automatically.
+- The web map calls the API at `VITE_API_BASE` (empty in development, where Vite proxies `/api`). The API allows
+  that origin through `CORS_ORIGINS`.
+- Render's free API sleeps after 15 idle minutes; the map shows a "waking up" note if the first answer takes
+  more than 4 seconds.
+- The monthly job runs against Neon (the main database); the local database is refreshed with a plain `load`.

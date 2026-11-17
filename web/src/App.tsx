@@ -69,11 +69,16 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [viewState, setViewState] = useState<MapViewState>(FLORIDA)
   const [basemap, setBasemap] = useState<BasemapName>('color')
+  const [waking, setWaking] = useState(false)
 
-  // first load: run dates and simulation starts
+  // first load: run dates and simulation starts. On the free host the API sleeps when idle, so if the first
+  // answer takes more than a few seconds, say that it's waking up rather than leaving the page silently empty.
   useEffect(() => {
-    api.runs().then(setRuns).catch(e => setError(`API not reachable: ${e.message}. Is uvicorn running?`))
+    const slow = setTimeout(() => setWaking(true), 4000)
+    api.runs().then(setRuns).catch(e => setError(`Can't reach the BearCast server (${e.message}). Try refreshing in a minute.`))
+      .finally(() => { clearTimeout(slow); setWaking(false) })
     api.sims().then(setStarts).catch(() => {})
+    return () => clearTimeout(slow)
   }, [])
 
   // fetch each hexagon layer once, the first time it's chosen
@@ -194,6 +199,7 @@ export default function App() {
           <p className="period-month">{forecastMonth}</p>
           <p className="period-sub">{activityRun?.data_through ? `Reports through ${longDate(activityRun.data_through)}` : 'Loading…'}</p>
         </div>
+        {waking && <p className="sb-wake">Waking up the BearCast server. On the free plan this can take up to a minute after a quiet spell…</p>}
         {error && <p className="sb-error">{error}</p>}
 
         <section className="sb-section">

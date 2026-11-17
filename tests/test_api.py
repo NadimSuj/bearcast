@@ -62,3 +62,13 @@ def test_corridors_sims_scores(client):
     assert sim["reach"][0]["cell"] == CENTER
     assert client.get("/api/sims/999").status_code == 404
     assert client.get("/api/scores").json() == []
+
+def test_cors_allows_deployed_origin_from_env(monkeypatch, client):
+    monkeypatch.setenv("CORS_ORIGINS", "https://bearcast.onrender.com/, https://example.org")
+    c = TestClient(create_app(client.app.state.engine))
+    ok = c.get("/api/runs", headers={"Origin": "https://bearcast.onrender.com"})
+    assert ok.headers.get("access-control-allow-origin") == "https://bearcast.onrender.com"
+    local = c.get("/api/runs", headers={"Origin": "http://localhost:5173"})
+    assert local.headers.get("access-control-allow-origin") == "http://localhost:5173"
+    other = c.get("/api/runs", headers={"Origin": "https://not-allowed.example"})
+    assert "access-control-allow-origin" not in other.headers

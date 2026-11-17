@@ -173,12 +173,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--only", nargs="+", choices=STEPS, help="run just these steps (in pipeline order)")
     p.add_argument("--skip-download", action="store_true")
     p.add_argument("--res", type=int, default=7)
+    p.add_argument("--url-var", default="DATABASE_URL", help="environment variable holding the database URL")
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     steps = [s for s in STEPS if s in args.only] if args.only else STEPS[STEPS.index(args.start):]
     if args.skip_download and "download" in steps:
         steps.remove("download")
-    summary = run(steps, res=args.res)
+    summary = run(steps, res=args.res, eng=engine(args.url_var))
     log.info("Summary:\n%s", json.dumps(summary, indent=2, default=str))
     return 0
 

@@ -64,12 +64,22 @@ export interface SimResult {
   note: string
 }
 
+// Where the API lives. Empty in development (Vite proxies /api to uvicorn); set VITE_API_BASE when deployed,
+// e.g. https://bearcast-api.onrender.com
+// Forgiving about how it's typed: "bearcast-api.onrender.com", ".../" and ".../api" all work.
+const RAW_BASE = ((import.meta.env.VITE_API_BASE as string | undefined) ?? '').trim().replace(/\/+$/, '').replace(/\/api$/, '')
+const API_BASE = RAW_BASE && !/^https?:\/\//.test(RAW_BASE) ? `https://${RAW_BASE}` : RAW_BASE
+
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(path)
+  const url = API_BASE + path
+  const res = await fetch(url)
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
     throw new Error(body.detail ?? `${res.status} ${res.statusText}`)
   }
+  // a web page instead of data means the request went to the map's own server, not the API
+  if (!(res.headers.get('content-type') ?? '').includes('json'))
+    throw new Error(`${new URL(url, window.location.href).href} returned a web page instead of data; check the API address (VITE_API_BASE)`)
   return res.json() as Promise<T>
 }
 
