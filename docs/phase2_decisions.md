@@ -8,3 +8,10 @@
 - `monthly_counts` is sparse (non-zero hexagon-months only). Full model features stay in Parquet; the DB keeps only what the app shows or the monthly job needs.
 - Simulated movement stored as hourly points; the `sim_tracks` view builds ordered lines with `ST_MakeLine`.
 - Tests use a separate `bearcast_test` database (wiped on each run), set by `TEST_DATABASE_URL`.
+
+## Step 2: loader and app queries
+- `bearcast.db.load`: reference tables upserted (COPY into a temp table, then INSERT ... ON CONFLICT DO UPDATE); `monthly_counts` replaced (non-zero rows only); model outputs appended as new `model_runs`.
+- Idempotent: each model load stores a SHA-256 fingerprint of its source files in `model_runs.params.source_sha`; the same files are never loaded twice. A new forecast file = a new run; `latest_*` views switch automatically; history is kept for scoring.
+- One transaction per load step; infinite values (unreachable corridor cells) stored as NULL.
+- Calls outside the hexagon universe are kept with `cell = NULL`.
+- `bearcast.db.queries`: point lookup (ST_Contains), nearby ranking (ST_DWithin on geography), statewide top / emerging, and map layers as GeoJSON assembled in SQL (json_build_object + ST_AsGeoJSON).
