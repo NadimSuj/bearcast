@@ -9,11 +9,14 @@
    hexagon gets   (costdist_A + costdist_B - best_path_cost) / best_path_cost   = how much costlier a
    route through it is than the best route (0 = on the best path). Each hexagon keeps its lowest
    value over pairs. Best paths are also saved as lines for the map.
-4. Road-crossing risk: movement (1 inside cores, exp(-value / WIDTH) elsewhere) x traffic
-   (log of the busiest road's AADT, scaled 0-1).
+4. Two road layers:
+     road_risk      habitat x traffic (log of the busiest road's AADT, scaled 0-1): where bears and cars meet.
+                    This is the roadkill-risk layer (it beat the corridor version at the top 5-10%).
+     crossing_risk  corridor movement (1 inside cores, exp(-value / WIDTH) elsewhere) x traffic: kept for
+                    reference; on_best_path + busy roads marks where dispersal routes cross highways.
 5. Check against roadkill (2010-2025, FWC carcasses + vehicle-strike captures): among hexagons with
-   state roads, share of roadkill in the top 5/10/20% by crossing risk vs traffic alone vs habitat x traffic.
-
+   state roads, share of roadkill in the top 5/10/20% by each score.
+   
 Outputs:
   data/processed/corridors_h3r7.parquet         per hexagon: resistance, core, corridor_value, crossing_risk
   data/processed/corridor_paths_h3r7.parquet    best-path lines between core pairs (GeoParquet, EPSG:4326)
@@ -80,13 +83,20 @@ def find_cores(cells: list[str], is_core: np.ndarray, min_cells: int = MIN_CORE_
 
 
 def name_cores(cells: list[str], core: np.ndarray) -> dict[int, str]:
+    """Name each core after every known population centre within ~25 km of it (west to east),
+    else the nearest centre within ~80 km of its middle, else 'core N'."""
     names: dict[int, str] = {}
     for k in sorted(set(core) - {-1}):
         pts = np.array([h3.cell_to_latlng(cells[i]) for i in np.flatnonzero(core == k)])
-        lat, lon = pts.mean(axis=0)
-        dist = {n: np.hypot(lat - a, (lon - b) * np.cos(np.radians(lat))) for n, (a, b) in KNOWN_POPULATIONS.items()}
-        best = min(dist, key=dist.get)
-        name = best if dist[best] < 0.8 else f"core {k}"          # ~80 km
+        near = [n for n, (a, b) in sorted(KNOWN_POPULATIONS.items(), key=lambda kv: kv[1][1])
+                if np.min(np.hypot(pts[:, 0] - a, (pts[:, 1] - b) * np.cos(np.radians(a)))) < 0.25]
+        if near:
+            name = "-".join(near)
+        else:
+            lat, lon = pts.mean(axis=0)
+            dist = {n: np.hypot(lat - a, (lon - b) * np.cos(np.radians(lat))) for n, (a, b) in KNOWN_POPULATIONS.items()}
+            best = min(dist, key=dist.get)
+            name = best if dist[best] < 0.8 else f"core {k}"
         names[k] = name if name not in names.values() else f"{name} ({k})"
     return names
 
@@ -167,6 +177,8 @@ def main(argv: list[str] | None = None) -> int:
     traffic = np.log1p(aadt) / np.log1p(aadt.max())
     t["movement"] = movement.astype(np.float32)
     t["crossing_risk"] = (movement * traffic).astype(np.float32)
+    t["road_risk"] = (t["habitat_pct"].fillna(0).to_numpy() * traffic).astype(np.float32)
+    t["on_best_path"] = t["cell"].isin({c for pth in paths for c in pth["cells"]}) & (core < 0)
 
     lines = []
     for pth, nm in zip(paths, pair_names):
@@ -197,14 +209,14 @@ def main(argv: list[str] | None = None) -> int:
     r = t[on_road]
     y = r["roadkill_2010_2025"].to_numpy(dtype=float)
     scores = {"traffic only": np.log1p(r["max_aadt"].to_numpy()),
-              "habitat x traffic": r["habitat_pct"].fillna(0).to_numpy() * np.log1p(r["max_aadt"].to_numpy()),
+              "road risk (habitat x traffic)": r["road_risk"].to_numpy(),
               "crossing risk (corridors)": r["crossing_risk"].to_numpy()}
     check = pd.DataFrame({name: {f"top {k:.0%}": capture(s, y, k) for k in (0.05, 0.10, 0.20)}
                           for name, s in scores.items()}).T
     log.info("Share of roadkill in the top k%% of road hexagons (%d hexagons):\n%s", len(r), check.round(3).to_string())
 
     out_cols = ["cell", "habitat_pct", "resistance", "core", "corridor_value", "corridor_pair", "in_corridor",
-                "movement", "crossing_risk", "roadkill_2010_2025"]
+                "on_best_path", "movement", "road_risk", "crossing_risk", "max_aadt", "roadkill_2010_2025"]
     t[out_cols].to_parquet(args.dir / f"corridors_{tag}.parquet", index=False)
     paths_gdf.to_parquet(args.dir / f"corridor_paths_{tag}.parquet", index=False)
     report = {"cores": t.loc[t["core"] != "", "core"].value_counts().to_dict(),

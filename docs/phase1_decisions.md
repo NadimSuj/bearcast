@@ -160,3 +160,11 @@ Pipeline: FWC calls → clean → H3 res-7 cell×month panel → history feature
 - `bearcast.bears.corridors`: resistance from habitat_pct (negative exponential, c = 4, range 1–100); cores = FWC frequent range clusters of ≥100 hexagons; Linkage-Mapper-style corridor value per hexagon for each core's 2 cheapest neighbours; best-path lines saved as GeoParquet.
 - Crossing risk = movement (1 in cores, exp(−value/0.05) outside) × scaled log AADT.
 - Check: share of 2010–2025 roadkill in the top 5/10/20% of road hexagons, crossing risk vs traffic only vs habitat × traffic.
+
+### Corridors result
+
+- Cores: Ocala/St. Johns 3,773 hexagons, Eglin-Apalachicola 2,821 (FWC frequent range is continuous along the Panhandle), Big Cypress 980, Osceola 517, Highlands/Glades 475. Chassahowitzka is below 100 frequent hexagons, so it's not a core (noted, threshold not lowered).
+- Best routes: Ocala–Osceola 35 km (1 busy-road hexagon, past Camp Blanding / O2O); Ocala–Highlands/Glades 55 km (7, central Florida highways); Big Cypress–Highlands/Glades 45 km (0); Apalachicola–Ocala 224 km via the Big Bend coast; Apalachicola–Osceola 87 km; Big Cypress–Ocala 214 km.
+- Roadkill check (2010–2025, 3,942 records on state-road hexagons), share in top 5/10/20%: traffic 4/7/14%; **habitat × traffic 22/38/56%**; corridor crossing risk 11/25/67%. Most roadkill is resident bears inside cores, which a corridor score can't separate.
+- Decision: app road-risk layer = habitat × traffic (`road_risk`). Corridors = connectivity layer; busy-road hexagons on best routes (`on_best_path`) = candidate wildlife-crossing sites.
+- Wekiva diagnosis: model's top 10% = remote upland conservation land NW of the study area; the tracked bears used the Wekiva River swamp (forested wetland 46% vs 10%, closer to roads and housing). Likely the availability circle includes habitat used by other, uncollared bears. Documented, not "fixed".

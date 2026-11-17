@@ -105,3 +105,14 @@ def test_corridor_follows_cheap_habitat_between_two_cores():
         if core[idx[c]] < 0:
             assert value[idx[c]] == pytest.approx(0, abs=1e-9)
     assert np.nanmax(value[np.isfinite(value)]) > 1
+
+
+
+def test_core_names_list_every_population_inside(monkeypatch):
+    from bearcast.bears import corridors as C
+    a, b = h3.latlng_to_cell(30.0, -84.0, 7), h3.latlng_to_cell(30.0, -83.8, 7)
+    strip = list(h3.grid_path_cells(a, b))
+    cells = sorted(set(strip) | set(h3.grid_disk(h3.latlng_to_cell(28.0, -81.0, 7), 1)))
+    core = np.array([0 if c in strip else 1 for c in cells])
+    monkeypatch.setattr(C, "KNOWN_POPULATIONS", {"West": (30.0, -84.0), "East": (30.0, -83.8), "Far": (28.0, -81.0)})
+    assert C.name_cores(cells, core) == {0: "West-East", 1: "Far"}
