@@ -1,0 +1,100 @@
+/Users/nadimulsujan05/Projects/bearcast/scripts/inspect_bear_points.py:62: UserWarning: GeoSeries.notna() previously returned False for both missing (None) and empty geometries. Now, it only returns False for missing values. Since the calling GeoSeries contains empty geometries, the result has changed compared to previous versions of GeoPandas.
+Given a GeoSeries 's', you can use '~s.is_empty & s.notna()' to get back the old behaviour.
+
+To further ignore this warning, you can do: 
+import warnings; warnings.filterwarnings('ignore', 'GeoSeries.notna', UserWarning)
+  if isinstance(df, gpd.GeoDataFrame) and df.geometry.notna().any():
+/Users/nadimulsujan05/Projects/bearcast/scripts/inspect_bear_points.py:62: UserWarning: GeoSeries.notna() previously returned False for both missing (None) and empty geometries. Now, it only returns False for missing values. Since the calling GeoSeries contains empty geometries, the result has changed compared to previous versions of GeoPandas.
+Given a GeoSeries 's', you can use '~s.is_empty & s.notna()' to get back the old behaviour.
+
+To further ignore this warning, you can do: 
+import warnings; warnings.filterwarnings('ignore', 'GeoSeries.notna', UserWarning)
+  if isinstance(df, gpd.GeoDataFrame) and df.geometry.notna().any():
+
+================================================================================
+fwc_telemetry_combined
+  rows 39,439 | columns: ['geometry', 'OBJECTID', 'Line', 'Source', 'Researcher', 'Year', 'Date', 'Time', 'Bear_ID', 'Sex', 'AgeClass', 'Loc_Type', 'Telem_Type', 'Activity', 'Habitat', 'Latitude', 'Longitude', 'UTME_NAD27', 'UTMN_NAD27', 'UTME_NAD83', 'UTMN_NAD83', 'Comments', 'last_edited_date']
+  Date: 1983-05-20 00:00:00+00:00 -> 2007-09-08 00:00:00+00:00 (25 distinct years); per year: {1983: 81, 1984: 168, 1985: 303, 1986: 335, 1987: 999, 1988: 495, 1989: 8, 1990: 11, 1991: 1052, 1992: 2570, 1993: 2464, 1994: 3562, 1995: 4202, 1996: 1712, 1997: 1980, 1998: 2233, 1999: 4524, 2000: 2411, 2001: 2387, 2002: 2060, 2003: 677, 2004: 330, 2005: 1505, 2006: 2360, 2007: 1009}
+  extent lon -87.49..-80.86, lat 25.69..30.95
+  first 3 rows:
+   OBJECTID  Line        Source Researcher  Year                      Date  Time     Bear_ID Sex  AgeClass   Loc_Type Telem_Type Activity Habitat   Latitude  Longitude  UTME_NAD27  UTMN_NAD27  UTME_NAD83  UTMN_NAD83 Comments last_edited_date
+0         1     1  Apalachicola    Seibert  1990 1990-12-17 00:00:00+00:00   930  M-X01/B119   M  Subadult  Telemetry     Ground                   29.992550 -84.542297         0.0         0.0         0.0         0.0                       NaT
+1         2     2  Apalachicola    Seibert  1990 1990-12-18 00:00:00+00:00  1820  M-X01/B119   M  Subadult  Telemetry     Ground                   29.989345 -84.554293         0.0         0.0         0.0         0.0                       NaT
+2         3     3  Apalachicola    Seibert  1990 1990-12-19 00:00:00+00:00   800  M-X01/B119   M  Subadult  Telemetry     Ground                   29.989345 -84.554293         0.0         0.0         0.0         0.0                       NaT
+  likely bear-ID columns (column, distinct values): [('Bear_ID', 415)]
+
+  using ID column 'Bear_ID' and time column 'Date':
+    bears 415 | fixes per bear: median 65, max 529 | days tracked per bear: median 376
+    hours between fixes (10/25/50/75/90th pct): 24.0 / 48.0 / 96.0 / 144.0 / 216.0
+    share of gaps <= 1h 0%, <= 4h 0%, <= 24h 15%
+    tracking years per bear-start: {1983: 3, 1984: 4, 1985: 15, 1986: 6, 1987: 7, 1988: 1, 1990: 2, 1991: 25, 1992: 36, 1993: 30, 1994: 25, 1995: 22, 1996: 22, 1997: 19, 1998: 15, 1999: 44, 2000: 34, 2001: 11, 2002: 13, 2004: 11, 2005: 48, 2006: 21, 2007: 1}
+
+================================================================================
+fwc_telemetry_camp_blanding
+  rows 123,772 | columns: ['geometry', 'OBJECTID', 'Collar', 'Bear', 'GMT_DATE', 'GMT_TIME', 'LMT_DATE', 'LMT_TIME', 'ECEF_X', 'ECEF_Y', 'ECEF_Z', 'LATITUDE', 'LONGITUDE', 'HEIGHT', 'DOP', 'NAV', 'VALIDATED', 'last_edited_date']
+  GMT_DATE: 2011-06-30 00:00:00+00:00 -> 2014-03-07 00:00:00+00:00 (4 distinct years); per year: {2011: 18776, 2012: 63406, 2013: 40822, 2014: 768}
+  LMT_DATE: 2011-06-30 00:00:00+00:00 -> 2014-03-07 00:00:00+00:00 (4 distinct years); per year: {2011: 18794, 2012: 63421, 2013: 40792, 2014: 765}
+  extent lon -82.37..-81.68, lat 29.72..30.38
+  first 3 rows:
+   OBJECTID  Collar  Bear                  GMT_DATE GMT_TIME                  LMT_DATE LMT_TIME  ECEF_X   ECEF_Y   ECEF_Z   LATITUDE  LONGITUDE  HEIGHT  DOP NAV VALIDATED last_edited_date
+0         1   31669   151 2011-06-30 00:00:00+00:00  6:00:50 2011-06-30 00:00:00+00:00  2:00:50  772589 -5479422  3161044  29.902916 -81.974300  -10.24  2.2  3D       Yes              NaT
+1         2   31669   151 2011-06-30 00:00:00+00:00  8:01:23 2011-06-30 00:00:00+00:00  4:01:23  772591 -5479430  3161051  29.902934 -81.974291    0.35  3.2  3D       Yes              NaT
+2         3   31669   151 2011-06-30 00:00:00+00:00  9:00:42 2011-06-30 00:00:00+00:00  5:00:42  772591 -5479436  3161065  29.903017 -81.974300   12.48  3.6  3D       Yes              NaT
+  likely bear-ID columns (column, distinct values): [('Collar', 15), ('Bear', 16)]
+
+  using ID column 'Collar' and time column 'GMT_DATE':
+    bears 15 | fixes per bear: median 8236, max 13,563 | days tracked per bear: median 387
+    hours between fixes (10/25/50/75/90th pct): 24.0 / 24.0 / 24.0 / 24.0 / 24.0
+    share of gaps <= 1h 0%, <= 4h 0%, <= 24h 99%
+    tracking years per bear-start: {2011: 8, 2012: 7}
+
+  using ID column 'Bear' and time column 'GMT_DATE':
+    bears 16 | fixes per bear: median 7828, max 13,563 | days tracked per bear: median 349
+    hours between fixes (10/25/50/75/90th pct): 24.0 / 24.0 / 24.0 / 24.0 / 24.0
+    share of gaps <= 1h 0%, <= 4h 0%, <= 24h 99%
+    tracking years per bear-start: {2011: 7, 2012: 9}
+
+================================================================================
+fwc_roadkill
+  rows 6,116 | columns: ['geometry', 'OBJECTID', 'BearID', 'ReportDate', 'SubType', 'RoadDate', 'Region', 'BMU', 'County', 'Locale', 'ZipCode', 'Latitude', 'Longitude', 'OrigCap', 'Sex', 'AgeClass', 'Weight', 'Age', 'Cubs', 'Yearlings', 'LEarTag1', 'LEarTag2', 'REarTag1', 'REarTag2', 'Tattoo1', 'Tattoo2', 'TrackNum', 'last_edited_date']
+  ReportDate: 1900-01-01 00:00:00+00:00 -> 2025-12-31 00:00:00+00:00 (50 distinct years); per year: {1900: 1, 1976: 2, 1978: 1, 1979: 4, 1980: 4, 1981: 7, 1982: 4, 1983: 14, 1984: 7, 1985: 17, 1986: 18, 1987: 27, 1988: 35, 1989: 45, 1990: 32, 1991: 43, 1992: 35, 1993: 41, 1994: 47, 1995: 47, 1996: 60, 1997: 74, 1998: 88, 1999: 81, 2000: 108, 2001: 101, 2002: 131, 2003: 108, 2004: 130, 2005: 146, 2006: 141, 2007: 166, 2008: 153, 2009: 123, 2010: 159, 2011: 193, 2012: 285, 2013: 231, 2014: 243, 2015: 247, 2016: 231, 2017: 249, 2018: 242, 2019: 238, 2020: 276, 2021: 289, 2022: 286, 2023: 318, 2024: 296, 2025: 284}
+  RoadDate: 1976-10-30 00:00:00+00:00 -> 2025-12-31 00:00:00+00:00 (49 distinct years); per year: {1976: 2, 1978: 1, 1979: 4, 1980: 4, 1981: 7, 1982: 4, 1983: 14, 1984: 7, 1985: 17, 1986: 18, 1987: 27, 1988: 35, 1989: 45, 1990: 32, 1991: 43, 1992: 35, 1993: 41, 1994: 47, 1995: 47, 1996: 60, 1997: 74, 1998: 88, 1999: 81, 2000: 108, 2001: 101, 2002: 131, 2003: 109, 2004: 129, 2005: 146, 2006: 141, 2007: 166, 2008: 153, 2009: 123, 2010: 159, 2011: 192, 2012: 282, 2013: 236, 2014: 243, 2015: 247, 2016: 231, 2017: 249, 2018: 242, 2019: 238, 2020: 276, 2021: 289, 2022: 285, 2023: 318, 2024: 299, 2025: 282}
+  last_edited_date: 2026-02-20 14:26:34+00:00 -> 2026-02-20 14:26:34+00:00 (1 distinct years); per year: {2026: 6116}
+  extent lon -87.41..-80.45, lat 25.86..30.93
+  Region: {'Northeast': 3211, 'Northwest': 1723, 'North Central': 509, 'South': 467, 'Southwest': 198, ' ': 8}
+  County: {'Lake': 1111, 'Marion': 917, 'Volusia': 526, 'Collier': 399, 'Franklin': 246, 'Bay': 230, 'Leon': 199, 'Seminole': 195, 'Jefferson': 195, 'Okaloosa': 191, 'Wakulla': 185, 'Putnam': 169, 'Orange': 162, 'Santa Rosa': 150, 'Gulf': 122}
+  first 3 rows:
+   OBJECTID           BearID                ReportDate  SubType                  RoadDate         Region      BMU   County Locale ZipCode  Latitude  Longitude OrigCap     Sex  AgeClass  Weight  Age Cubs Yearlings LEarTag1 LEarTag2 REarTag1 REarTag2 Tattoo1 Tattoo2 TrackNum          last_edited_date
+0         1  Bear-0000010593 1979-10-18 00:00:00+00:00  Capture 1979-10-18 00:00:00+00:00  North Central  Central  Alachua                 29.70386  -82.13389            Male  Juvenile     190  3.0    0         0                                                              2026-02-20 14:26:34+00:00
+1         2  Bear-0000010919 1989-03-01 00:00:00+00:00  Capture 1989-03-01 00:00:00+00:00          South    South  Collier                 25.92441  -81.35799            Male  Juvenile     127  2.0    0         0                                                              2026-02-20 14:26:34+00:00
+2         3  Bear-0000010945 1989-06-04 00:00:00+00:00  Capture 1989-06-04 00:00:00+00:00          South    South  Collier                 25.94520  -81.47595          Female  Juvenile     140  0.0    0         0                                                              2026-02-20 14:26:34+00:00
+
+================================================================================
+fwc_captures
+  rows 3,142 | columns: ['geometry', 'OBJECTID', 'IncidentID', 'ReportDate', 'CapDate', 'Region', 'BMU', 'County', 'Locale', 'City', 'ZipCode', 'Latitude', 'Longitude', 'CapReason', 'OCapReason', 'NCapReason', 'CapMethod', 'OrigCap', 'FinAction', 'OFinAction', 'Sex', 'AgeClass', 'Weight', 'Age', 'Cubs', 'Yearlings', 'LEarTag1', 'LEarTag2', 'REarTag1', 'REarTag2', 'Tattoo1', 'Tattoo2', 'TrackNum', 'last_edited_date']
+  ReportDate: 1900-01-01 00:00:00+00:00 -> 2025-12-31 00:00:00+00:00 (44 distinct years); per year: {1900: 2, 1981: 1, 1982: 1, 1985: 1, 1986: 4, 1987: 1, 1988: 3, 1989: 4, 1990: 2, 1991: 3, 1992: 5, 1993: 10, 1994: 66, 1995: 1, 1996: 138, 1997: 21, 1998: 7, 1999: 159, 2000: 22, 2001: 144, 2002: 39, 2003: 49, 2004: 144, 2005: 54, 2006: 45, 2007: 74, 2008: 47, 2009: 44, 2010: 46, 2011: 57, 2012: 77, 2013: 64, 2014: 110, 2015: 51, 2016: 259, 2017: 97, 2018: 72, 2019: 83, 2020: 97, 2021: 342, 2022: 97, 2023: 153, 2024: 242, 2025: 204}
+  CapDate: 1981-10-15 00:00:00+00:00 -> 2026-01-04 00:00:00+00:00 (42 distinct years); per year: {1981: 1, 1986: 3, 1987: 1, 1988: 2, 1989: 4, 1990: 2, 1991: 3, 1992: 5, 1993: 10, 1994: 7, 1995: 20, 1996: 56, 1997: 62, 1998: 71, 1999: 63, 2000: 81, 2001: 66, 2002: 84, 2003: 47, 2004: 67, 2005: 50, 2006: 52, 2007: 76, 2008: 40, 2009: 31, 2010: 24, 2011: 38, 2012: 79, 2013: 65, 2014: 101, 2015: 62, 2016: 97, 2017: 169, 2018: 117, 2019: 121, 2020: 105, 2021: 176, 2022: 177, 2023: 239, 2024: 239, 2025: 207, 2026: 1}
+  last_edited_date: 2026-02-20 14:07:33+00:00 -> 2026-02-20 14:07:33+00:00 (1 distinct years); per year: {2026: 3142}
+  extent lon -87.47..-80.25, lat 25.48..30.98
+  Region: {'Northeast': 1305, 'Northwest': 963, 'South': 457, 'North Central': 224, 'Southwest': 193}
+  County: {'Franklin': 513, 'Collier': 435, 'Marion': 428, 'Lake': 388, 'Seminole': 207, 'Okaloosa': 178, 'Orange': 147, 'Columbia': 136, 'Highlands': 131, 'Volusia': 112, 'Bay': 72, 'Santa Rosa': 54, 'Wakulla': 54, 'Leon': 40, 'Lee': 33}
+  first 3 rows:
+   OBJECTID       IncidentID                ReportDate                   CapDate     Region      BMU    County Locale     City ZipCode   Latitude  Longitude CapReason OCapReason NCapReason CapMethod OrigCap          FinAction OFinAction   Sex  AgeClass  Weight  Age Cubs Yearlings LEarTag1 LEarTag2 REarTag1 REarTag2 Tattoo1 Tattoo2 TrackNum          last_edited_date
+0         1  Bear-0000016160 1900-01-01 00:00:00+00:00 2013-07-25 00:00:00+00:00  Northeast  Central    Putnam                       0  29.453280 -81.751470  Research                        Cambrian     Yes   Released On-Site             Male     Adult   275.0  4.0    0         0                                        E179       0          2026-02-20 14:07:33+00:00
+1         2  Bear-0000016292 1900-01-01 00:00:00+00:00 2014-07-25 00:00:00+00:00  Northeast  Central    Putnam                       0  29.518333 -81.777500  Research                           Snare     Yes   Released On-Site             Male       Cub    60.0  1.0    0         0                                        E240       0          2026-02-20 14:07:33+00:00
+2         3  Bear-0000009484 1981-10-15 00:00:00+00:00 1981-10-15 00:00:00+00:00  Northeast  Central  Seminole         SANFORD   32771  28.745243 -81.286189  Conflict                                          Released Off-Site             Male  Juvenile    90.0  0.0    0         0                                                   0          2026-02-20 14:07:33+00:00
+
+================================================================================
+fwc_relocations
+  rows 2,494 | columns: ['geometry', 'OBJECTID', 'BearID', 'ReportDate', 'RelDate', 'Region', 'BMU', 'County', 'Locale', 'City', 'ZipCode', 'Latitude', 'Longitude', 'CapReason', 'OCapReason', 'NCapReason', 'CapMethod', 'OrigCap', 'FinAction', 'OFinAction', 'Sex', 'AgeClass', 'Weight', 'Age', 'Cubs', 'Yearlings', 'LEarTag1', 'LEarTag2', 'REarTag1', 'REarTag2', 'Tattoo1', 'Tattoo2', 'TrackNum', 'last_edited_date']
+  ReportDate: 1900-01-01 00:00:00+00:00 -> 2025-12-31 00:00:00+00:00 (37 distinct years); per year: {1900: 2, 1988: 3, 1989: 3, 1991: 2, 1992: 2, 1993: 3, 1994: 2, 1996: 3, 1997: 1, 1998: 3, 1999: 13, 2000: 6, 2001: 18, 2002: 30, 2003: 46, 2004: 140, 2005: 53, 2006: 40, 2007: 64, 2008: 45, 2009: 37, 2010: 46, 2011: 56, 2012: 76, 2013: 64, 2014: 108, 2015: 51, 2016: 258, 2017: 96, 2018: 72, 2019: 82, 2020: 97, 2021: 274, 2022: 96, 2023: 158, 2024: 242, 2025: 202}
+  RelDate: 1988-05-17 00:00:00+00:00 -> 2026-01-07 00:00:00+00:00 (37 distinct years); per year: {1988: 2, 1989: 3, 1991: 2, 1992: 2, 1993: 3, 1994: 1, 1996: 2, 1997: 1, 1998: 2, 1999: 10, 2000: 3, 2001: 7, 2002: 17, 2003: 23, 2004: 61, 2005: 43, 2006: 46, 2007: 65, 2008: 36, 2009: 20, 2010: 22, 2011: 26, 2012: 53, 2013: 30, 2014: 101, 2015: 62, 2016: 96, 2017: 168, 2018: 117, 2019: 117, 2020: 107, 2021: 174, 2022: 176, 2023: 157, 2024: 255, 2025: 196, 2026: 16}
+  last_edited_date: 2026-02-20 14:19:59+00:00 -> 2026-02-20 14:19:59+00:00 (1 distinct years); per year: {2026: 2494}
+  extent lon -87.00..-80.71, lat 25.91..30.74
+  Region: {'Northeast': 959, 'Northwest': 843, 'South': 372, 'North Central': 184, 'Southwest': 136}
+  County: {'Marion': 672, 'Liberty': 391, 'Collier': 353, 'Franklin': 228, 'Highlands': 115, 'Lake': 90, 'Walton': 73, 'Levy': 69, 'Volusia': 55, 'Orange': 52, 'Putnam': 45, 'Santa Rosa': 39, 'Clay': 38, 'Seminole': 37, 'Wakulla': 36}
+  first 3 rows:
+   OBJECTID           BearID                ReportDate                   RelDate     Region      BMU   County Locale City  ZipCode   Latitude  Longitude CapReason OCapReason NCapReason             CapMethod OrigCap          FinAction OFinAction     Sex  AgeClass  Weight  Age Cubs Yearlings LEarTag1 LEarTag2 REarTag1 REarTag2 Tattoo1 Tattoo2 TrackNum          last_edited_date
+0         1  Bear-0000016160 1900-01-01 00:00:00+00:00 2013-07-25 00:00:00+00:00  Northeast  Central   Putnam                    0  29.453280 -81.751470  Research                                    Cambrian     Yes   Released On-Site               Male     Adult   275.0  4.0    0         0                                        E179                  2026-02-20 14:19:59+00:00
+1         2  Bear-0000016292 1900-01-01 00:00:00+00:00 2014-07-25 00:00:00+00:00  Northeast  Central   Putnam                    0  29.509647 -81.782029  Research                                       Snare     Yes   Released On-Site               Male       Cub    60.0  1.0    0         0                                        E240                  2026-02-20 14:19:59+00:00
+2         3  Bear-0000006870 1988-05-17 00:00:00+00:00 1988-05-17 00:00:00+00:00      South    South  Collier                    0  26.298624 -81.530924  Conflict             In Apiary  Cage (e.g. Havahart)     Yes  Released Off-Site             Female  Juvenile    70.0  0.0                                       413              413                  2026-02-20 14:19:59+00:00

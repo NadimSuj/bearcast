@@ -67,3 +67,28 @@ def test_classes_flags_and_repeats():
     assert not out.loc["IN-5", "is_encounter"]
     assert out.loc["IN-6", "call_class"] == "unmapped"
     assert out["is_repeat"].sum() == 1 and out.loc["IN-1", "repeat_group_size"] == 2
+
+
+
+def test_new_recent_reasons_are_mapped():
+    for r in ["unknown", "orphaned cub", "in trap", "killed human"]:
+        assert r in C.CALL_CLASS
+
+
+def test_open_layer_only_fills_the_gap_between_historical_and_recent():
+    hist = _gdf([_row(1, "2022-12-31")])
+    rec = _gdf([_row(10, "2025-01-02")], recent=True)
+    # Open layer overlaps both ends, with different IDs for the same calls.
+    opn = _gdf([_row(901, "2022-12-31"), _row(902, "2023-06-01"), _row(903, "2024-11-30"), _row(904, "2025-01-02")])
+    out = C.clean(hist, rec, opn)
+    assert sorted(out["IncidentID"]) == ["IN-1", "IN-10", "IN-902", "IN-903"]
+    assert set(out.loc[out["source_layer"] == "open_gapfill", "date"].dt.year) == {2023, 2024}
+
+
+
+def test_duplicate_ids_within_recent_keep_last_downloaded_copy():
+    hist = _gdf([_row(1, "2022-12-31")])
+    rec = _gdf([_row(7, "2026-03-01", reason="In Area"), _row(7, "2026-03-01", reason="In Garbage")], recent=True)
+    out = C.clean(hist, rec).set_index("IncidentID")
+    assert len(out) == 2
+    assert out.loc["IN-7", "reason"] == "in garbage"

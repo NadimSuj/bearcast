@@ -1,0 +1,52 @@
+2026-11-16 21:16:44,103 INFO Loaded 3355452 rows x 53 features (22 history, 31 landscape/land cover), 2016-01-01 to 2024-12-01
+2026-11-16 21:16:59,567 INFO [val2023] history model: 215 rounds in 15s
+2026-11-16 21:17:15,869 INFO [val2024] history model: 231 rounds in 16s
+2026-11-16 21:17:37,951 INFO [val2023] full model: 218 rounds in 22s
+2026-11-16 21:18:07,757 INFO [val2024] full model: 302 rounds in 30s
+2026-11-16 21:18:08,752 INFO [val2023] 2899 conflicts (821 in cold cells)
+              capture@1%  capture@5%  cold_capture@1%  cold_capture@5%  poisson_dev  pred/actual
+score                                                                                           
+base_longrun       0.435       0.810            0.079            0.477        0.063        0.820
+base_last12        0.455       0.715            0.000            0.029          NaN          NaN
+gbm_history        0.518       0.853            0.060            0.530        0.039        0.974
+gbm_full           0.512       0.858            0.049            0.545        0.038        0.990
+2026-11-16 21:18:08,752 INFO [val2023] top features (full):
+  conf_hist_rate           0.230
+  conf_sum12               0.215
+  conf_lag1                0.157
+  months_since_conf        0.059
+  enc_sum12                0.053
+  nbr1_conf_sum12          0.046
+  nbr1_conf_lag1           0.020
+  month_num                0.016
+  lc_urban_low             0.016
+  range_rank               0.014
+  nbr2_conf_sum12          0.013
+  hu_den_2010              0.009
+  state_conf_yoy3          0.009
+  lon                      0.008
+  lc_transport_extractive  0.008
+2026-11-16 21:18:09,717 INFO [val2024] 2139 conflicts (653 in cold cells)
+              capture@1%  capture@5%  cold_capture@1%  cold_capture@5%  poisson_dev  pred/actual
+score                                                                                           
+base_longrun       0.436       0.814            0.085            0.500        0.050        1.125
+base_last12        0.429       0.703            0.000            0.012          NaN          NaN
+gbm_history        0.460       0.852            0.045            0.551        0.033        0.986
+gbm_full           0.476       0.844            0.054            0.540        0.032        0.965
+2026-11-16 21:18:09,717 INFO [val2024] top features (full):
+  months_since_conf        0.175
+  conf_sum12               0.171
+  conf_hist_rate           0.168
+  conf_lag1                0.136
+  enc_sum12                0.055
+  nbr1_conf_sum12          0.040
+  month_num                0.034
+  nbr1_conf_lag1           0.021
+  lc_urban_low             0.015
+  nbr2_conf_sum12          0.014
+  range_rank               0.012
+  state_conf_yoy3          0.009
+  lon                      0.008
+  state_conf_lag1          0.008
+  pop_den_2020             0.007
+2026-11-16 21:18:09,717 INFO Wrote data/processed/gbm_h3r7_report.json

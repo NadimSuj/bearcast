@@ -39,6 +39,10 @@ FWC_LAYERS: dict[str, dict[str, str]] = {
         "url": f"{PUBLIC_MAP}/0",
         "note": "Bears handled by FWC, recent records.",
     },
+        "calls_open": {
+        "url": f"{HOST}/mapping/rest/services/Open_Data/Black_Bear_Related_Calls_in_Florida/MapServer/13",
+        "note": "Open Data calls layer (WIMS). Used only to fill dates the other calls layers miss.",
+    },
     "roadkill": {
         "url": f"{OPEN}/Black_Bear_Roadkill_Locations/MapServer/12",
         "note": "Vehicle-killed bears. Secondary target / movement signal.",

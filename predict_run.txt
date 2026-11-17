@@ -1,0 +1,34 @@
+2026-11-17 00:08:49,234 INFO Forecasting 2026-11 for 31069 hexagons (data through 2026-10)
+2026-11-17 00:08:49,362 INFO month                                  2026-11
+2026-11-17 00:08:49,363 INFO hexagons                               31069
+2026-11-17 00:08:49,363 INFO expected_calls_statewide               345.2
+2026-11-17 00:08:49,363 INFO calibration                            {'factor': 1.2797, 'from': '2025-11-01', 'to': '2026-10-01'}
+2026-11-17 00:08:49,363 INFO tiers                                  {'very high': 310, 'high': 1243, 'elevated': 4660, 'low': 24856}
+2026-11-17 00:08:49,363 INFO share_of_expected_calls_in_top_5pct    0.901
+2026-11-17 00:08:49,363 INFO hexagons_without_recent_conflict       29966
+2026-11-17 00:08:49,363 INFO model                                  gbm_h3r7_final_full.txt
+2026-11-17 00:08:49,368 INFO Top 10 hexagons:
+           cell    lat     lon  expected_calls  conf_sum12
+874452d30ffffff 30.409 -86.753           5.010        41.0
+874452d32ffffff 30.415 -86.730           3.255        29.0
+8744a931effffff 28.716 -81.516           3.047        17.0
+874452da0ffffff 30.456 -86.653           2.809        17.0
+8744e5052ffffff 30.331 -86.111           2.534        21.0
+8744e5336ffffff 30.370 -86.277           2.142        13.0
+8744566d2ffffff 30.422 -86.861           2.008        14.0
+874452d20ffffff 30.412 -86.819           1.856        21.0
+8744566c3ffffff 30.440 -86.945           1.852        21.0
+8744e6242ffffff 30.225 -84.374           1.829        17.0
+2026-11-17 00:08:49,374 INFO Top 10 emerging-risk hexagons (no conflict in the last 12 months):
+           cell    lat     lon  expected_calls  never_conflict
+874413c1effffff 26.048 -81.686           0.344           False
+8744566d1ffffff 30.431 -86.903           0.308           False
+8744f4123ffffff 29.061 -82.207           0.300           False
+8744e5048ffffff 30.382 -86.230           0.294           False
+8744f4cebffffff 29.042 -81.963           0.286           False
+874413554ffffff 26.288 -81.600           0.279           False
+8744566ecffffff 30.400 -87.021           0.264           False
+8744e4788ffffff 29.736 -84.869           0.250           False
+8744e6a6effffff 29.864 -84.684           0.247           False
+8744e5330ffffff 30.385 -86.296           0.246           False
+2026-11-17 00:08:49,375 INFO Wrote data/processed/forecast_h3r7_2026-11.parquet

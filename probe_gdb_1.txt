@@ -1,0 +1,72 @@
+== Versions
+rasterio 1.5.2 | GDAL 3.12.2
+pyogrio 0.13.0 | pyogrio GDAL 3.12.4
+rasterio has the OpenFileGDB raster driver: False
+  -> rasterio's built-in GDAL can't read File Geodatabase rasters; a full GDAL install is needed
+system gdalinfo: not installed
+
+== Folder data/raw/landscape/landcover 
+  .gdb folders: ['CLC_v4_Raster.gdb']
+
+== CLC_v4_Raster_SITE.lyrx
+  dataset: ['CLC_v4_SITE']
+  datasetType: ['esriDTRasterDataset']
+  workspaceFactory: ['FileGDB']
+  workspaceConnectionString: ['DATABASE=.\\CLC_v4_Raster.gdb']
+  233 labelled classes; first 15:
+    ['1110000'] -> 1110 - Hardwod Forested Uplands
+    ['1111000'] -> 1111 - Upland Hardwood Forest
+    ['1112000'] -> 1112 - Mixed Hardwoods
+    ['1120000'] -> 1120 - Mesic Hammock
+    ['1122000'] -> 1122 - Prairie Mesic Hammock
+    ['1123000'] -> 1123 - Live Oak
+    ['1124000'] -> 1124 - Pine - Mesic Oak
+    ['1125000'] -> 1125 - Cabbage Palm
+    ['1130000'] -> 1130 - Rockland Hammock
+    ['1131000'] -> 1131 - Thorn Scrub
+    ['1140000'] -> 1140 - Slope Forest
+    ['1150000'] -> 1150 - Xeric Hammock
+    ['1210000'] -> 1210 - Scrub
+    ['1211000'] -> 1211 - Oak Scrub
+    ['1212000'] -> 1212 - Rosemary Scrub
+
+== CLC_v4_Raster_STATE.lyrx
+  dataset: ['CLC_v4_STATE']
+  datasetType: ['esriDTRasterDataset']
+  workspaceFactory: ['FileGDB']
+  workspaceConnectionString: ['DATABASE=.\\CLC_v4_Raster.gdb']
+  77 labelled classes; first 15:
+    ['1110000'] -> 1110 - Hardwod Forested Uplands
+    ['1120000'] -> 1120 - Mesic Hammock
+    ['1130000'] -> 1130 - Rockland Hammock
+    ['1140000'] -> 1140 - Slope Forest
+    ['1150000'] -> 1150 - Xeric Hammock
+    ['1200000'] -> 1200 - High Pine and Scrub
+    ['1210000'] -> 1210 - Scrub
+    ['1213000'] -> 1213 - Sand Pine Scrub
+    ['1214000'] -> 1214 - Coastal Scrub
+    ['1231000'] -> 1231 - Upland Pine
+    ['1240000'] -> 1240 - Sandhill
+    ['1310000'] -> 1310 - Dry Flatwoods
+    ['1311000'] -> 1311 - Mesic Flatwoods
+    ['1312000'] -> 1312 - Scrubby Flatwoods
+    ['1320000'] -> 1320 - Pine Rockland
+
+== CLC_v4_Raster.gdb: 109 files inside, 0.48 GB
+
+-- try plain path: data/raw/landscape/landcover/CLC_v4_Raster.gdb
+  FAILED: RasterioIOError: 'data/raw/landscape/landcover/CLC_v4_Raster.gdb' not recognized as being in a supported file format.
+
+-- try OpenFileGDB prefix: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb"
+  FAILED: RasterioIOError: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb": No such file or directory
+
+-- try dataset CLC_v4_Raster: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_Raster
+  FAILED: RasterioIOError: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_Raster: No such file or directory
+
+-- try dataset CLC_v4_SITE: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_SITE
+  FAILED: RasterioIOError: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_SITE: No such file or directory
+
+-- try dataset CLC_v4_STATE: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_STATE
+  FAILED: RasterioIOError: OpenFileGDB:"data/raw/landscape/landcover/CLC_v4_Raster.gdb":CLC_v4_STATE: No such file or directory
+
+== RESULT: nothing opened the raster

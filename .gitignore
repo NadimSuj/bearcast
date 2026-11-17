@@ -3,6 +3,7 @@ data/raw/*
 !data/raw/.gitkeep
 data/interim/
 data/processed/
+data/models/
 
 # python
 __pycache__/
@@ -13,3 +14,4 @@ __pycache__/
 
 # secrets
 .env
+.DS_Store

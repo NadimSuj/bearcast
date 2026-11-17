@@ -1,0 +1,29 @@
+2026-11-16 20:23:23,320 INFO 31069 cells
+2026-11-16 20:23:23,320 INFO Housing (SILVIS blocks)...
+2026-11-16 20:23:24,442 INFO   housing blocks 100000 / 432959
+2026-11-16 20:23:25,269 INFO   housing blocks 200000 / 432959
+2026-11-16 20:23:25,828 INFO   housing blocks 300000 / 432959
+2026-11-16 20:23:26,428 INFO   housing blocks 400000 / 432959
+2026-11-16 20:23:26,678 INFO   housing blocks 432959 / 432959
+2026-11-16 20:23:27,046 INFO Conservation lands (FNAI)...
+/Users/nadimulsujan05/Projects/bearcast/.venv/lib/python3.14/site-packages/pyogrio/raw.py:200: RuntimeWarning: organizePolygons() received a polygon with more than 100 parts. The processing may be really slow.  You can skip the processing by setting METHOD=SKIP, or only make it analyze counter-clock wise parts by setting METHOD=ONLY_CCW if you can assume that the outline of holes is counter-clock wise defined
+  return ogr_read(
+2026-11-16 20:24:20,507 INFO Roads and traffic (FDOT)...
+2026-11-16 20:24:23,388 INFO Summary:
+                          mean     50%        90%         max
+hu_2020                303.415   2.000    933.200   26265.000
+hu_den_2020             64.147   0.425    196.441    5726.965
+hu_den_2010             58.270   0.425    161.917    4132.834
+hu_growth_2010_2020      0.049   0.000      0.214       6.688
+pop_den_2020           151.268   1.511    466.959    9177.317
+wui_intermix_share       0.089   0.000      0.344       1.000
+wui_interface_share      0.052   0.000      0.151       1.000
+veg_pct_2019            54.887  58.143     95.315     100.000
+cons_share               0.321   0.026      1.000       1.000
+dist_cons_km             1.866   0.861      5.193      28.300
+dist_bigcons_km          6.389   3.736     17.290      50.848
+road_km_per_km2          0.535   0.168      1.512      10.945
+traffic_vkm_per_km2   6034.304   0.000  17117.096  398161.031
+max_aadt             10578.062   0.000  33000.000  336000.000
+dist_major_road_km       8.947   5.444     22.322     114.010
+2026-11-16 20:24:23,388 INFO Wrote data/processed/landscape_h3r7.parquet (15 features)

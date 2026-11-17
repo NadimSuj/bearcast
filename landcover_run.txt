@@ -1,0 +1,22 @@
+2026-11-16 21:15:52,488 INFO 31069 cells | raster 74694 x 73603, res (10.0, 10.0), EPSG:3087
+2026-11-16 21:16:41,418 INFO   read 456 windows with hexagons; 76 distinct pixel values
+2026-11-16 21:16:41,418 INFO   codes grouped as 'other': [1800, 7000, 9100]
+2026-11-16 21:16:41,525 INFO Summary:
+                          mean    50%    90%    max
+lc_tree_plantation       0.117  0.000  0.441  0.990
+lc_urban_high            0.067  0.000  0.288  0.839
+lc_urban_low             0.045  0.004  0.142  0.850
+lc_rural_developed       0.037  0.009  0.105  0.813
+lc_agriculture           0.160  0.014  0.578  1.000
+lc_transport_extractive  0.056  0.029  0.155  1.000
+lc_hardwood_upland       0.044  0.006  0.143  0.799
+lc_pine_scrub_upland     0.093  0.012  0.329  0.994
+lc_shrub_coastal_barren  0.008  0.000  0.019  0.968
+lc_forested_wetland      0.150  0.078  0.407  1.000
+lc_open_wetland          0.121  0.026  0.357  1.000
+lc_water                 0.097  0.007  0.292  1.000
+lc_other                 0.003  0.000  0.001  0.919
+lc_nodata                0.002  0.000  0.000  1.000
+lc_natural               0.416  0.357  0.944  1.000
+lc_diversity             1.201  1.269  1.880  2.345
+2026-11-16 21:16:41,525 INFO Wrote data/processed/landcover_h3r7.parquet (16 features)
