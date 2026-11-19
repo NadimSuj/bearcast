@@ -53,11 +53,9 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
             <section>
               <p className="d-eyebrow">Recent activity</p>
               <p className="d-sub">90 days to {longDate(info.activity_as_of)}</p>
-              <div className="d-split">
-                <p className="big">{num(info.reports_90d)} report{info.reports_90d === 1 ? '' : 's'}</p>
-                <span className={`chip chip-${level}`}>{cap(level)} nearby</span>
-              </div>
-              <p className="d-text">Last report: {ago(info.days_since_report)}</p>
+              <Row label="Reports" value={num(info.reports_90d)} />
+              <Row label="Activity level" value={`${cap(level)} nearby`} />
+              <Row label="Last report" value={ago(info.days_since_report)} />
             </section>
 
             <section>
@@ -65,20 +63,17 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
               <p className="range">{info.range_label ? `FWC range: ${info.range_label}` : 'Outside FWC bear range'}</p>
 
               <Row label="Habitat percentile" value={pct(info.habitat_pct)} />
-              {info.core && <p className="d-text">Inside the {info.core} population core</p>}
+              {info.core && <Row label="Population core" value={info.core} />}
 
               {info.corridor_pair && !info.core && (
-                <>
-                  <Row label="Corridor route" value={`+${pct(info.corridor_value)}`} />
-                  <p className="d-text">{info.corridor_pair}, {pct(info.corridor_value)} costlier than the best route</p>
-                </>
+                <Row label={`Corridor · ${info.corridor_pair}`} value={`+${pct(info.corridor_value)}`} />
               )}
 
               <Row label="Road risk" value={num(info.road_risk, 2)} />
-              <p className="d-text">{info.max_aadt ? `Busiest road: ${num(info.max_aadt)} vehicles/day` : 'No major roads'}</p>
-
-              <p className="d-text spaced">{num(info.hu_den_2020)} homes/km² · {pct(info.cons_share)} conservation land</p>
-              <p className="d-text">{pct(info.lc_natural)} natural cover</p>
+              <Row label="Busiest road" value={info.max_aadt ? `${num(info.max_aadt)} vehicles/day` : 'No major roads'} />
+              <Row label="Homes" value={`${num(info.hu_den_2020)} / km²`} />
+              <Row label="Conservation land" value={pct(info.cons_share)} />
+              <Row label="Natural cover" value={pct(info.lc_natural)} />
             </section>
           </>
         )}
