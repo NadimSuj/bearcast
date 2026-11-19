@@ -24,20 +24,23 @@ export function SimControls({ starts, selected, onSelect, hour, maxHour, playing
     <section className="sb-section">
       <p className="eyebrow">Simulated movement</p>
       <p className="sb-sub">Where bears could wander from a starting point</p>
-      <select className="sb-select" value={selected ?? ''} onChange={e => onSelect(e.target.value === '' ? null : Number(e.target.value))}>
-        <option value="">Choose a Starting Point…</option>
-        {cores.length > 0 && (
-          <optgroup label="Population Cores">
-            {cores.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
-          </optgroup>
-        )}
-        {hotspots.length > 0 && (
-          <optgroup label="Recent Activity Hotspots">
-            {hotspots.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
-          </optgroup>
-        )}
-        {others.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
-      </select>
+      <div className="sb-select-wrapper">
+        <select className="sb-select" value={selected ?? ''} onChange={e => onSelect(e.target.value === '' ? null : Number(e.target.value))}>
+          <option value="">Choose a Starting Point…</option>
+          {cores.length > 0 && (
+            <optgroup label="Population Cores">
+              {cores.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
+            </optgroup>
+          )}
+          {hotspots.length > 0 && (
+            <optgroup label="Recent Activity Hotspots">
+              {hotspots.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
+            </optgroup>
+          )}
+          {others.map(s => <option key={s.start_id} value={s.start_id}>{s.label.name}</option>)}
+        </select>
+      </div>
+
 
       {current ? (
         <p className="sb-note start-what">
