@@ -17,6 +17,9 @@ export interface Run {
 
 export interface PointInfo {
   cell: string
+  location_name: string | null
+  lat: number | null
+  lon: number | null
   range_label: string | null
   forecast_month: string | null
   expected_calls: number | null

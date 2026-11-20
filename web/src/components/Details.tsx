@@ -17,13 +17,23 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
   if (!info && !error) return null
   const tier = info?.tier ?? 'low'
   const level = info?.activity_level ?? 'none'
+  const locationName = info?.location_name
+    ? `${cap(info.location_name)}, Florida`
+    : 'Florida'
   return (
     <div className="details">
       <header className="d-head">
         <div>
           <p className="eyebrow">Selected location</p>
-          <h2>This hexagon</h2>
-          {info && <p className="d-cell">H3 {info.cell}</p>}
+          <h2>{locationName}</h2>
+          {info && (
+            <div className="d-location-meta">
+              {info.lat !== null && info.lon !== null
+                ? <span>{Number(info.lat).toFixed(4)}, {Number(info.lon).toFixed(4)}</span>
+                : null}
+              <span className="d-h3">H3 <code>{info.cell}</code></span>
+            </div>
+          )}
         </div>
         <button className="d-close" onClick={onClose} aria-label="Close">
           <svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>

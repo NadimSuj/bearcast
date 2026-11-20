@@ -28,7 +28,16 @@ SELECT h.cell, h.range_label,
        f.month AS forecast_month, f.expected_calls, f.tier, f.risk_rank, f.emerging_rank, f.never_conflict,
        a.as_of AS activity_as_of, a.reports_90d, a.days_since_report, a.activity_level,
        b.habitat_pct, b.core, b.corridor_pair, b.corridor_value, b.road_risk,
-       l.hu_den_2020, l.cons_share, l.lc_natural, l.max_aadt
+       l.hu_den_2020, l.cons_share, l.lc_natural, l.max_aadt,
+       round(ST_Y(h.centroid)::numeric, 4) AS lat,
+       round(ST_X(h.centroid)::numeric, 4) AS lon,
+       (
+         SELECT CASE WHEN c.county ~* ' county$' THEN c.county ELSE c.county || ' County' END
+         FROM calls c
+         WHERE c.county IS NOT NULL AND btrim(c.county) <> ''
+         ORDER BY c.geom <-> h.centroid
+         LIMIT 1
+       ) AS location_name
 FROM hexagons h
 LEFT JOIN latest_forecast    f USING (cell)
 LEFT JOIN latest_activity    a USING (cell)
