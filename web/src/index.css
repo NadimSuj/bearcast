@@ -542,8 +542,8 @@ button {
 }
 
 .d-head h2 {
-  margin: 4px 0 2px;
-  font-size: 24px;
+  margin: 4px 0 6px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -551,6 +551,22 @@ button {
 .d-cell {
   font-size: 12.5px;
   color: var(--sand);
+}
+
+.d-location-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+}
+
+.d-h3 code {
+  color: var(--sand);
+  font-family: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
 }
 
 .d-close {
