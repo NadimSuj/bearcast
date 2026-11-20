@@ -33,11 +33,17 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
       <div className="d-body">
         {error ? <p className="d-muted">{error}</p> : info && (
           <>
-            <section>
-              <p className="d-eyebrow">Conflict forecast{info.forecast_month ? ` · ${longDate(info.forecast_month, { month: 'long', year: 'numeric' })}` : ''}</p>
+            <section className="d-section d-forecast">
+              <div className="d-section-heading">
+                <p className="d-eyebrow">Conflict forecast</p>
+                {info.forecast_month && <p className="d-period">{longDate(info.forecast_month, { month: 'long', year: 'numeric' })}</p>}
+              </div>
               {info.forecast_month ? (
                 <>
-                  <span className={`tier tier-${tier.replace(' ', '-')}`}>{cap(tier)}</span>
+                  <div className="d-status">
+                    <span className={`tier tier-${tier.replace(' ', '-')}`}>{cap(tier)}</span>
+                    <span className="d-status-label">Risk level</span>
+                  </div>
                   <div className="stats">
                     <div><p className="stat">{num(info.expected_calls, 2)}</p><p className="stat-label">Expected calls</p></div>
                     <div><p className="stat stat-rank">#{num(info.risk_rank)}</p><p className="stat-label">Statewide rank</p></div>
@@ -45,35 +51,44 @@ export function Details({ info, error, onClose }: { info: PointInfo | null; erro
                 </>
               ) : <p className="d-muted">No forecast for this hexagon.</p>}
               {info.emerging_rank !== null && (
-                <p className="callout">Emerging-risk rank #{num(info.emerging_rank)} among hexagons with no conflict in the last year
-                  {info.never_conflict ? ', and none ever recorded' : ''}.</p>
+                <p className="callout"><span>Emerging risk</span>Rank #{num(info.emerging_rank)} among hexagons with no conflict in the last year
+                  {info.never_conflict ? ', and none ever recorded' : ''}</p>
               )}
             </section>
 
-            <section>
-              <p className="d-eyebrow">Recent activity</p>
-              <p className="d-sub">90 days to {longDate(info.activity_as_of)}</p>
-              <Row label="Reports" value={num(info.reports_90d)} />
-              <Row label="Activity level" value={`${cap(level)} nearby`} />
-              <Row label="Last report" value={ago(info.days_since_report)} />
+            <section className="d-section">
+              <div className="d-section-heading">
+                <p className="d-eyebrow">Recent activity</p>
+                <p className="d-period">Through {longDate(info.activity_as_of)}</p>
+              </div>
+              <div className="activity-card">
+                <div className="activity-main">
+                  <p className="activity-number">{num(info.reports_90d)}</p>
+                  <p className="activity-label">Reports in 90 days</p>
+                </div>
+                <div className="activity-meta">
+                  <Row label="Activity" value={`${cap(level)} nearby`} />
+                  <Row label="Last report" value={ago(info.days_since_report)} />
+                </div>
+              </div>
             </section>
 
-            <section>
+            <section className="d-section d-landscape">
               <p className="d-eyebrow">Bears and landscape</p>
-              <p className="range">{info.range_label ? `FWC range: ${info.range_label}` : 'Outside FWC bear range'}</p>
+              <p className="range">{info.range_label ? `FWC range · ${info.range_label}` : 'Outside FWC bear range'}</p>
 
-              <Row label="Habitat percentile" value={pct(info.habitat_pct)} />
-              {info.core && <Row label="Population core" value={info.core} />}
-
-              {info.corridor_pair && !info.core && (
-                <Row label={`Corridor · ${info.corridor_pair}`} value={`+${pct(info.corridor_value)}`} />
-              )}
-
-              <Row label="Road risk" value={num(info.road_risk, 2)} />
-              <Row label="Busiest road" value={info.max_aadt ? `${num(info.max_aadt)} vehicles/day` : 'No major roads'} />
-              <Row label="Homes" value={`${num(info.hu_den_2020)} / km²`} />
-              <Row label="Conservation land" value={pct(info.cons_share)} />
-              <Row label="Natural cover" value={pct(info.lc_natural)} />
+              <div className="d-data-card">
+                <Row label="Habitat percentile" value={pct(info.habitat_pct)} />
+                {info.core && <Row label="Population core" value={info.core} />}
+                {info.corridor_pair && !info.core && (
+                  <Row label={`Corridor · ${info.corridor_pair}`} value={`+${pct(info.corridor_value)}`} />
+                )}
+                <Row label="Road risk" value={num(info.road_risk, 2)} />
+                <Row label="Busiest road" value={info.max_aadt ? `${num(info.max_aadt)} vehicles/day` : 'No major roads'} />
+                <Row label="Housing density" value={`${num(info.hu_den_2020)} / km²`} />
+                <Row label="Conservation land" value={pct(info.cons_share)} />
+                <Row label="Natural cover" value={pct(info.lc_natural)} />
+              </div>
             </section>
           </>
         )}
