@@ -199,7 +199,7 @@ export default function App() {
           <p className="period-month">{forecastMonth}</p>
           <p className="period-sub">{activityRun?.data_through ? `Reports through ${longDate(activityRun.data_through)}` : 'Loading…'}</p>
         </div>
-        {waking && <p className="sb-wake">Waking up the BearCast server. On the free plan this can take up to a minute after a quiet spell…</p>}
+        {waking && <p className="sb-wake">Waking up the BearCast server.</p>}
         {error && <p className="sb-error">{error}</p>}
 
         <section className="sb-section">
